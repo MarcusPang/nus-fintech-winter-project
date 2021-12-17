@@ -9,11 +9,11 @@
 
 ## Timeline
 
-13/12 - 19/12: Smart Contract
-20/12 - 26/12: Smart Contract + Interface With MetaMask
-27/12 - 2/1 : Interface With MetaMask + Frontend
-3/1 - 10/1 : Frontend
-10/1 - 12/1 : Cleanup
+- 13/12 - 19/12: Smart Contract
+- 20/12 - 26/12: Smart Contract + Interface With MetaMask
+- 27/12 - 2/1 : Interface With MetaMask + Frontend
+- 3/1 - 10/1 : Frontend
+- 10/1 - 12/1 : Cleanup
 
 ## Functionalities
 
