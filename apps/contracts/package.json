@@ -7,8 +7,9 @@
     "accounts": "hardhat accounts",
     "build": "hardhat compile",
     "test": "hardhat test",
-    "node:hardhat": "hardhat node",
-    "deploy": "hardhat run scripts/deploy.ts --network localhost",
+    "node:localhost": "hardhat node",
+    "deploy": "hardhat run scripts/deploy.ts --network",
+    "dev": "concurrently --kill-others-on-fail \"yarn node:localhost\" \"yarn deploy localhost\"",
     "lint": "yarn lint:ts && yarn lint:sol && yarn format",
     "lint:ts": "eslint \"**/*.+(ts|js|tsx)\" --fix",
     "lint:sol": "solhint \"contracts/**/*.sol\"",
@@ -26,6 +27,7 @@
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
     "chai": "^4.2.0",
+    "concurrently": "^6.5.0",
     "dotenv": "^10.0.0",
     "eslint": "^7.29.0",
     "eslint-config-prettier": "^8.3.0",
@@ -46,5 +48,8 @@
     "tsconfig": "*",
     "typechain": "^5.1.2",
     "typescript": "^4.5.3"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.4.1"
   }
 }
