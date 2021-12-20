@@ -54,3 +54,5 @@ If the `yarn dev` command is taking up too much CPU (I think it's a bug), go to 
 ## Contracts
 
 Built using Hardhat (similar to truffle), see [getting started](https://hardhat.org/getting-started/). For reference, see [gnosis safe-contracts](https://github.com/gnosis/safe-contracts).
+
+MultiSigWallet contract code adapted from [this example](https://solidity-by-example.org/app/multi-sig-wallet/).
