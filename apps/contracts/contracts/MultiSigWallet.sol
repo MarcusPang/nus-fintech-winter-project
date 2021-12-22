@@ -4,6 +4,8 @@ pragma solidity ^0.8.4;
 import "hardhat/console.sol";
 
 contract MultiSigWallet {
+
+    //Events
     event Deposit(address indexed sender, uint amount, uint balance);
     event SubmitTransaction(
         address indexed owner,
@@ -15,7 +17,10 @@ contract MultiSigWallet {
     event ConfirmTransaction(address indexed owner, uint indexed txIndex);
     event RevokeConfirmation(address indexed owner, uint indexed txIndex);
     event ExecuteTransaction(address indexed owner, uint indexed txIndex);
+    event AddOwner(address indexed owner, uint indexed owIndex);
+    event RemoveOwner(address indexed owner);
 
+    //Variables & Mappings
     address[] public owners;
     mapping(address => bool) public isOwner;
     uint public percentConfirmationsRequired;
@@ -27,12 +32,12 @@ contract MultiSigWallet {
         bool executed;
         uint numConfirmations;
     }
+    Transaction[] public transactions;
 
     // mapping from tx index => owner => bool
     mapping(uint => mapping(address => bool)) public isConfirmed;
 
-    Transaction[] public transactions;
-
+    // Modifiers
     modifier onlyOwner() {
         require(isOwner[msg.sender], "not owner");
         _;
@@ -53,6 +58,7 @@ contract MultiSigWallet {
         _;
     }
 
+    // Constructor
     // Receive a uint representing percentage (from 0 to 100) of confirmations required
     constructor(address[] memory _owners, uint _percentConfirmationsRequired) {
         require(_owners.length > 0, "owners required");
@@ -75,6 +81,21 @@ contract MultiSigWallet {
         percentConfirmationsRequired = _percentConfirmationsRequired;
     }
 
+    // Owner Functions
+    function addOwner(address newOwner) public onlyOwner {
+        uint owIndex = owners.length;
+        isOwner[newOwner] = true;
+        owners.push(newOwner);
+        emit AddOwner(newOwner,owIndex);
+    }
+
+    function removeOwner(address existingOwner) public onlyOwner {
+        uint owIndex = owners[existingOwner];
+        isOwner[existingOwner] = false;
+        emit RemoveOwner(existingOwner);
+    }
+
+    // Transaction Functions
     receive() external payable {
         emit Deposit(msg.sender, msg.value, address(this).balance);
     }
@@ -153,6 +174,7 @@ contract MultiSigWallet {
         emit RevokeConfirmation(msg.sender, _txIndex);
     }
 
+    // Getters
     function getOwners() public view returns (address[] memory) {
         return owners;
     }
