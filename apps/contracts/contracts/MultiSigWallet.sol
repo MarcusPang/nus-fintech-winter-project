@@ -81,12 +81,6 @@ contract MultiSigWallet {
         percentConfirmationsRequired = _percentConfirmationsRequired;
     }
 
-    function checkOwners(address[] memory ownersToCheck) internal {
-        for (uint256 i = 0; i < ownersToCheck.length; i++) {
-            require(ownersToCheck[i], "owner not valid");
-        }
-    }
-
     // Owner Functions
     function addOwner(address newOwner) public onlyOwner {
         uint256 owIndex = owners.length;

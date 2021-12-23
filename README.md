@@ -19,19 +19,20 @@
 
 ### Contracts
 
-- [ ] Add/delete wallet
-- [ ] Assign/remove owners (done by existing owners of wallet)
-- [ ] Read all owners
-- [ ] Submit transaction
-- [ ] Multi-sign
-- [ ] Execute transaction (after enough signatures)
+- [x] Add/delete wallet (deployment)
+- [x] Assign/remove owners (done by existing owners of wallet)
+- [x] Read all owners
+- [x] Submit transaction
+- [x] Multi-sign
+- [x] Execute transaction (after enough signatures)
 
 ### Frontend
 
+- [ ] Setup multi-sig wallet deployment (backend)
 - [ ] Send/receive tokens (multi-signature)
-- [ ] See past transactions
-- [ ] See current value
-- [ ] Sign in/sign out
+- [ ] Sign in/sign out (metamask) 
+- [ ] See past transactions 
+- [ ] See current value 
 - [ ] See all users (like a explorer tool)
 
 # Setup
