@@ -4,38 +4,37 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 
 contract MultiSigWallet {
-
     //Events
-    event Deposit(address indexed sender, uint amount, uint balance);
+    event Deposit(address indexed sender, uint256 amount, uint256 balance);
     event SubmitTransaction(
         address indexed owner,
-        uint indexed txIndex,
+        uint256 indexed txIndex,
         address indexed to,
-        uint value,
+        uint256 value,
         bytes data
     );
-    event ConfirmTransaction(address indexed owner, uint indexed txIndex);
-    event RevokeConfirmation(address indexed owner, uint indexed txIndex);
-    event ExecuteTransaction(address indexed owner, uint indexed txIndex);
-    event AddOwner(address indexed owner, uint indexed owIndex);
+    event ConfirmTransaction(address indexed owner, uint256 indexed txIndex);
+    event RevokeConfirmation(address indexed owner, uint256 indexed txIndex);
+    event ExecuteTransaction(address indexed owner, uint256 indexed txIndex);
+    event AddOwner(address indexed owner, uint256 indexed owIndex);
     event RemoveOwner(address indexed owner);
 
     //Variables & Mappings
     address[] public owners;
     mapping(address => bool) public isOwner;
-    uint public percentConfirmationsRequired;
+    uint256 public percentConfirmationsRequired;
 
     struct Transaction {
         address to;
-        uint value;
+        uint256 value;
         bytes data;
         bool executed;
-        uint numConfirmations;
+        uint256 numConfirmations;
     }
     Transaction[] public transactions;
 
     // mapping from tx index => owner => bool
-    mapping(uint => mapping(address => bool)) public isConfirmed;
+    mapping(uint256 => mapping(address => bool)) public isConfirmed;
 
     // Modifiers
     modifier onlyOwner() {
@@ -43,24 +42,25 @@ contract MultiSigWallet {
         _;
     }
 
-    modifier txExists(uint _txIndex) {
+    modifier txExists(uint256 _txIndex) {
         require(_txIndex < transactions.length, "tx does not exist");
         _;
     }
 
-    modifier notExecuted(uint _txIndex) {
+    modifier notExecuted(uint256 _txIndex) {
         require(!transactions[_txIndex].executed, "tx already executed");
         _;
     }
 
-    modifier notConfirmed(uint _txIndex) {
+    modifier notConfirmed(uint256 _txIndex) {
         require(!isConfirmed[_txIndex][msg.sender], "tx already confirmed");
         _;
     }
 
     // Constructor
     // Receive a uint representing percentage (from 0 to 100) of confirmations required
-    constructor(address[] memory _owners, uint _percentConfirmationsRequired) {
+    constructor(address[] memory _owners, uint256 _percentConfirmationsRequired)
+    {
         require(_owners.length > 0, "owners required");
         require(
             _percentConfirmationsRequired > 0 &&
@@ -68,7 +68,7 @@ contract MultiSigWallet {
             "invalid percentage of required confirmations"
         );
 
-        for (uint i = 0; i < _owners.length; i++) {
+        for (uint256 i = 0; i < _owners.length; i++) {
             address owner = _owners[i];
 
             require(owner != address(0), "invalid owner");
@@ -81,12 +81,18 @@ contract MultiSigWallet {
         percentConfirmationsRequired = _percentConfirmationsRequired;
     }
 
+    function checkOwners(address[] memory ownersToCheck) internal {
+        for (uint256 i = 0; i < ownersToCheck.length; i++) {
+            require(ownersToCheck[i], "owner not valid");
+        }
+    }
+
     // Owner Functions
     function addOwner(address newOwner) public onlyOwner {
-        uint owIndex = owners.length;
+        uint256 owIndex = owners.length;
         isOwner[newOwner] = true;
         owners.push(newOwner);
-        emit AddOwner(newOwner,owIndex);
+        emit AddOwner(newOwner, owIndex);
     }
 
     function removeOwner(address existingOwner) public onlyOwner {
@@ -101,10 +107,10 @@ contract MultiSigWallet {
 
     function submitTransaction(
         address _to,
-        uint _value,
+        uint256 _value,
         bytes memory _data
     ) public onlyOwner {
-        uint txIndex = transactions.length;
+        uint256 txIndex = transactions.length;
 
         transactions.push(
             Transaction({
@@ -119,7 +125,7 @@ contract MultiSigWallet {
         emit SubmitTransaction(msg.sender, txIndex, _to, _value, _data);
     }
 
-    function confirmTransaction(uint _txIndex)
+    function confirmTransaction(uint256 _txIndex)
         public
         onlyOwner
         txExists(_txIndex)
@@ -133,7 +139,7 @@ contract MultiSigWallet {
         emit ConfirmTransaction(msg.sender, _txIndex);
     }
 
-    function executeTransaction(uint _txIndex)
+    function executeTransaction(uint256 _txIndex)
         public
         onlyOwner
         txExists(_txIndex)
@@ -143,7 +149,8 @@ contract MultiSigWallet {
 
         // Check that number of confirmations for a transaction is greater than required number of confirmations
         require(
-            transaction.numConfirmations >= (percentConfirmationsRequired / 100) * owners.length,
+            transaction.numConfirmations >=
+                (percentConfirmationsRequired / 100) * owners.length,
             "cannot execute tx"
         );
 
@@ -157,7 +164,7 @@ contract MultiSigWallet {
         emit ExecuteTransaction(msg.sender, _txIndex);
     }
 
-    function revokeConfirmation(uint _txIndex)
+    function revokeConfirmation(uint256 _txIndex)
         public
         onlyOwner
         txExists(_txIndex)
@@ -178,19 +185,19 @@ contract MultiSigWallet {
         return owners;
     }
 
-    function getTransactionCount() public view returns (uint) {
+    function getTransactionCount() public view returns (uint256) {
         return transactions.length;
     }
 
-    function getTransaction(uint _txIndex)
+    function getTransaction(uint256 _txIndex)
         public
         view
         returns (
             address to,
-            uint value,
+            uint256 value,
             bytes memory data,
             bool executed,
-            uint numConfirmations
+            uint256 numConfirmations
         )
     {
         Transaction storage transaction = transactions[_txIndex];

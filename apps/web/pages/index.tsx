@@ -18,75 +18,13 @@ const walletAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
 const Homepage = () => {
   const [userAccount, setUserAccount] = useState("");
+  const [transactionIndex, setTransactionIndex] = useState(0);
   const [amount, setAmount] = useState(0);
 
   const requestAccount = async () => {
     // request from metamask the user account
     await window.ethereum.request({ method: "eth_requestAccounts" });
   };
-
-  // const fetchGreeting = async () => {
-  //   // check if metamask is available
-  //   if (window.ethereum) {
-  //     const provider = new ethers.providers.Web3Provider(window.ethereum);
-  //     console.log({ provider });
-  //     const contract = new ethers.Contract(
-  //       greeterAddress,
-  //       Greeter.abi,
-  //       provider
-  //     );
-  //     try {
-  //       const data = await contract.greet();
-  //       console.log("data: ", data);
-  //     } catch (err) {
-  //       console.log("Error: ", err);
-  //     }
-  //   }
-  // };
-
-  // async function getBalance() {
-  //   if (typeof window.ethereum !== "undefined") {
-  //     const [account] = await window.ethereum.request({
-  //       method: "eth_requestAccounts",
-  //     });
-  //     const provider = new ethers.providers.Web3Provider(window.ethereum);
-  //     const contract = new ethers.Contract(tokenAddress, Token.abi, provider);
-  //     const balance = await contract.balanceOf(account);
-  //     console.log("Balance: ", balance.toString());
-  //   }
-  // }
-
-  const sendAmount = async () => {
-    if (window.ethereum) {
-      await requestAccount();
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(walletAddress, Wallet.abi, signer);
-      const transaction = await contract.submitTransaction(
-        userAccount,
-        amount,
-        "0x00"
-      );
-      console.log(transaction);
-      // await transaction.wait();
-      // console.log(`${amount} Coins successfully sent to ${userAccount}`);
-    }
-  };
-
-  // const setGreetingValue = async () => {
-  //   if (!greeting) return;
-  //   if (window.ethereum) {
-  //     await requestAccount();
-  //     const provider = new ethers.providers.Web3Provider(window.ethereum);
-  //     console.log({ provider });
-  //     const signer = provider.getSigner();
-  //     const contract = new ethers.Contract(greeterAddress, Greeter.abi, signer);
-  //     const transaction = await contract.setGreeting(greeting);
-  //     setGreeting("");
-  //     await transaction.wait();
-  //     fetchGreeting();
-  //   }
-  // };
 
   const getOwners = async () => {
     if (window.ethereum) {
@@ -109,22 +47,44 @@ const Homepage = () => {
       }
     }
   };
+  
+  const submitTransaction = async () => {
+    if (window.ethereum) {
+      await requestAccount();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(walletAddress, Wallet.abi, signer);
+      const transaction = await contract.submitTransaction(
+        userAccount,
+        amount,
+        "0x00"
+      );
+      console.log(transaction);
+    }
+  };
+
+  const confirmTransaction = async () => {
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(walletAddress, Wallet.abi, signer);
+      try {
+        const transaction = await contract.confirmTransaction(transactionIndex);
+        console.log(transaction);
+      } catch (e) {
+        console.log("[error]: ", e);
+      }
+    }
+  };
 
   return (
     <div>
       <h1>Web</h1>
-      {/* <button onClick={fetchGreeting}>Fetch Greeting</button>
-      <button onClick={setGreetingValue}>Set Greeting</button>
-      <input
-        onChange={(e) => setGreeting(e.target.value)}
-        placeholder="set greeting"
-        value={greeting}
-      /> */}
-
       <br />
       <button onClick={getOwners}>get owners</button>
       <button onClick={getTransactions}>get transactions</button>
-      <button onClick={sendAmount}>send amount</button>
+      <button onClick={submitTransaction}>submit transaction</button>
+      <button onClick={confirmTransaction}>confirm transaction</button>
       <input
         onChange={(e) => setUserAccount(e.target.value)}
         placeholder="user account"
@@ -132,6 +92,10 @@ const Homepage = () => {
       <input
         onChange={(e) => setAmount(+e.target.value)}
         placeholder="amount"
+      />
+      <input
+        onChange={(e) => setTransactionIndex(+e.target.value)}
+        placeholder="transaction index"
       />
     </div>
   );

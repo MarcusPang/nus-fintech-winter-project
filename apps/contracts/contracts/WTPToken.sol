@@ -7,7 +7,7 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract WTPToken is ERC20 {
-  constructor() ERC20("Winter Project Token", "WTP") {
-    _mint(msg.sender, 100000 * (10**18));
-  }
+    constructor() ERC20("Winter Project Token", "WTP") {
+        _mint(msg.sender, 100000 * (10**18));
+    }
 }
