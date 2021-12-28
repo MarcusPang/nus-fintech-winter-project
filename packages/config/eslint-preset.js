@@ -5,6 +5,7 @@ module.exports = {
       rootDir: [
         "apps/contracts/",
         "apps/web/",
+        "apps/backend",
         "packages/config/",
         "packages/tsconfig/",
       ],
