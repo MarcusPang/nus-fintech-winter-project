@@ -52,6 +52,14 @@ Make sure the `Greeter` and `WTPToken` address are the same as the values at [in
 
 If the `yarn dev` command is taking up too much CPU (I think it's a bug), go to each `apps` directory and run `yarn dev` in separate terminals
 
+## Set up express backend
+- `npm install` in root directory and `npm install` in apps/backend directory to install dependencies
+- in apps/backend directory, `set PORT=3001` to change the port that the express backend is running on to 3001 (since 3000 is being used by frontned)
+- in apps/backend directory, `npm start`
+- access backend at `http://localhost:3001/`
+
+
+
 ## Contracts
 
 Built using Hardhat (similar to truffle), see [getting started](https://hardhat.org/getting-started/). For reference, see [gnosis safe-contracts](https://github.com/gnosis/safe-contracts).
