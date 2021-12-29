@@ -4,9 +4,10 @@
  * Module dependencies.
  */
 
-import app from "./app";
 import debug from "debug";
 import http from "http";
+import { HttpError } from "http-errors";
+import app from "./app";
 const debugServer = debug("backend:server");
 /**
  * Get port from environment and store in Express.
@@ -53,7 +54,7 @@ function normalizePort(val: string) {
  * Event listener for HTTP server "error" event.
  */
 
-function onError(error) {
+function onError(error: HttpError) {
   if (error.syscall !== "listen") {
     throw error;
   }
@@ -78,7 +79,10 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-  debugServer("Listening on " + bind);
+  const addr = server.address();
+  if (addr) {
+    const bind =
+      typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+    debugServer("Listening on " + bind);
+  }
 }

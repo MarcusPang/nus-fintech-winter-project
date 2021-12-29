@@ -6,10 +6,10 @@ const router = Router();
 router.get("/", function (req, res, next) {
   console.log("Setting up hardhat node and deploying...");
   const myShellScript = exec("cd ../contracts && yarn dev");
-  myShellScript.stdout.on("data", (data) => {
+  myShellScript.stdout!.on("data", (data) => {
     console.log(data);
   });
-  myShellScript.stderr.on("data", (data) => {
+  myShellScript.stderr!.on("data", (data) => {
     console.error(data);
   });
 });
