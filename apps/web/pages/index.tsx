@@ -1,11 +1,12 @@
-import Image from "next/image";
 import { useState } from "react";
 import { useMoralis, useNativeBalance } from "react-moralis";
 import { Web3Provider } from "react-moralis/lib/hooks/core/useMoralis/_useMoralisWeb3";
 import {
   confirmTransaction,
+  createWallet,
   getOwners,
   getTransactions,
+  getWallets,
   submitTransaction,
 } from "../utils/web3";
 
@@ -38,8 +39,10 @@ const connectors: {
 
 const Homepage = () => {
   const [userAccount, setUserAccount] = useState("");
+  const [percentage, setPercentage] = useState(0);
   const [transactionIndex, setTransactionIndex] = useState(0);
   const [amount, setAmount] = useState(0);
+  const [walletIndex, setWalletIndex] = useState(0);
   const { authenticate, isAuthenticated, user, logout } = useMoralis();
 
   if (!isAuthenticated) {
@@ -68,6 +71,23 @@ const Homepage = () => {
     <div>
       <h1>Welcome {user.get("username")}</h1>
       <button onClick={() => logout()}>Logout</button>
+      <input
+        onChange={(e) => setUserAccount(e.target.value)}
+        placeholder="user account"
+      />
+      <input
+        onChange={(e) => setPercentage(+e.target.value)}
+        placeholder="percentage required"
+      />
+      <button onClick={async () => await createWallet(userAccount, percentage)}>
+        Create Wallet
+      </button>
+      <br />
+      <input
+        onChange={(e) => setWalletIndex(+e.target.value)}
+        placeholder="Wallet index"
+      />
+      <button onClick={() => getWallets(walletIndex)}>Print wallets</button>
     </div>
   );
 
