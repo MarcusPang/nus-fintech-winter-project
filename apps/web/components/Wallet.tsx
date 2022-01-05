@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useWeb3ExecuteFunction } from "react-moralis";
 import styles from "../styles/Wallet.module.css";
-import { createWalletOptions } from "../utils/web3";
+import { walletOptions } from "../utils/web3";
 import DataRow from "./DataRow";
 import OwnerModalForm from "./OwnerModalForm";
 import TransactionModalForm from "./TransactionModalForm";
@@ -24,7 +24,7 @@ const Wallet = ({ wallet }: { wallet: any }) => {
 
   const fetchOwners = async () => {
     await fetch({
-      params: createWalletOptions(
+      params: walletOptions(
         wallet.attributes.walletAddress,
         "getOwners",
         {}
