@@ -1,4 +1,4 @@
-import styles from '../styles/MyWalletsComponent.module.css';
+import styles from '../styles/Wallet.module.css';
 import DataRow from './DataRow';
 import FullWidthButton from './FullWidthButton';
 
@@ -16,7 +16,6 @@ const Wallet = () => {
       <p><b>Active transactions:</b></p>
       {transactions.map((txn, index) => (<DataRow text={txn} buttonText="Approve transaction"key={index} />))}
       <FullWidthButton text="Submit New Transaction"/>
-      
     </div>
   );
 };
