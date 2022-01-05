@@ -1,0 +1,6 @@
+.buttonDiv {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  padding: 1rem 0;
+}

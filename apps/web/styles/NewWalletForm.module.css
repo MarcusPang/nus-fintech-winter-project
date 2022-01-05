@@ -1,0 +1,18 @@
+.createNewWallet {
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  background: white;
+  box-shadow: 5px 5px 5px lightgrey;
+  display: flex;
+  flex-direction: column;
+}
+
+.formElems {
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+.formElems input, .formElems button {
+  width: 100%;
+}
