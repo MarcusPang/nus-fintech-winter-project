@@ -52,7 +52,7 @@ Commands:
 ## Setup
 
 - `yarn dev` in [apps/contracts](apps/contracts) to start local dev network and build smart contracts
-- `./start.sh` in root directory to start reverse proxy
+- `./startproxy.sh` in root directory to start reverse proxy. `./startproxy_mac.sh` for mac users.
 - `yarn dev` in [apps/web](apps/web) to start frontend
 
 ## Contracts
