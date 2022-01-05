@@ -1,0 +1,21 @@
+.header {
+  height: 7vh;
+  box-shadow: 5px 5px 5px lightgrey;
+  z-index: 1;
+}
+
+.background {
+  height: 100%;
+  background-color: #f7f5f5;
+}
+
+.content {
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.testing {
+  border: 1px solid red;
+  padding: 1rem;
+}
