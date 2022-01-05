@@ -1,14 +1,18 @@
 import React, { useState } from "react";
-import { useMoralis, useNativeBalance } from "react-moralis";
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import { Web3Provider } from "react-moralis/lib/hooks/core/useMoralis/_useMoralisWeb3";
-import { getWallets } from "../utils/web3";
+import WalletFactory from "../../contracts/artifacts/contracts/MultiSigWalletFactory.sol/MultiSigWalletFactory.json";
+import MyWalletsComponent from "../components/MyWalletsComponent";
 import NewWalletForm from "../components/NewWalletForm";
 import UserHeader from "../components/UserHeader";
 import WalletExplanation from "../components/WalletExplanation";
 import styles from "../styles/index.module.css";
-import MyWalletsComponent from "../components/MyWalletsComponent";
 import HomeImg from "../assets/home_image.jpeg";
 import Image from "next/image";
+import {
+  createWalletFactoryOptions,
+  walletFactoryAddress,
+} from "../utils/web3";
 
 // so typescript doesn't give an error for window.ethereum
 declare global {
@@ -40,6 +44,18 @@ const connectors: {
 const Homepage = () => {
   const [walletIndex, setWalletIndex] = useState(0);
   const { authenticate, isAuthenticated } = useMoralis();
+  const { data, fetch, error } = useWeb3ExecuteFunction();
+
+  console.log("[address]:", data);
+
+  const printWallet = () => {
+    fetch({
+      params: createWalletFactoryOptions("wallets", {
+        "": walletIndex,
+      }),
+    });
+    console.log(error);
+  };
 
   if (!isAuthenticated) {
     return (
@@ -83,41 +99,12 @@ const Homepage = () => {
               onChange={(e) => setWalletIndex(+e.target.value)}
               placeholder="Wallet index"
             />
-            <button onClick={() => getWallets(walletIndex)}>
-              Print wallets
-            </button>
+            <button onClick={() => printWallet()}>Print wallets</button>
           </div>
         </div>
       </div>
     </div>
   );
-
-  // return (
-  //   <div>
-  //     <h1>Web</h1>
-  //     <br />
-  //     <button onClick={getOwners}>get owners</button>
-  //     <button onClick={getTransactions}>get transactions</button>
-  //     <button onClick={() => submitTransaction(userAccount, amount)}>
-  //       submit transaction
-  //     </button>
-  //     <button onClick={() => confirmTransaction(transactionIndex)}>
-  //       confirm transaction
-  //     </button>
-  //     <input
-  //       onChange={(e) => setUserAccount(e.target.value)}
-  //       placeholder="user account"
-  //     />
-  //     <input
-  //       onChange={(e) => setAmount(+e.target.value)}
-  //       placeholder="amount"
-  //     />
-  //     <input
-  //       onChange={(e) => setTransactionIndex(+e.target.value)}
-  //       placeholder="transaction index"
-  //     />
-  //   </div>
-  // );
 };
 
 export default Homepage;
