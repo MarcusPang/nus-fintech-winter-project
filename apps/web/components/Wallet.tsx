@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useWeb3ExecuteFunction } from "react-moralis";
+import { useState, useEffect } from "react";
+import { useMoralis, useMoralisQuery, useWeb3ExecuteFunction } from "react-moralis";
 import styles from "../styles/Wallet.module.css";
 import { createWalletOptions } from "../utils/web3";
 import DataRow from "./DataRow";
@@ -13,27 +13,52 @@ const transactions = [
   "Request to send 500 ETH from 0xSAM to 0xLILY",
 ];
 
-function onDeleteOwner() {}
+// function onDeleteOwner() {}
 
 function onApproveTransaction() {}
 
 const Wallet = ({ wallet }: { wallet: any }) => {
+
   const [owners, setOwners] = useState([]);
+  const [percentageConfirmation, setPercentageConfirmation] = useState(0);
+  
   const { data, error, fetch, isFetching, isLoading } =
     useWeb3ExecuteFunction();
 
-  const fetchOwners = async () => {
-    await fetch({
-      params: createWalletOptions(
-        wallet.attributes.walletAddress,
-        "getOwners",
-        {}
-      ),
-    });
-    setOwners(data as any);
-    console.log(data);
-    console.log("error", error);
-  };
+  // const fetchOwners = async () => {
+  //   await fetch({
+  //     params: createWalletOptions(
+  //       wallet.attributes.walletAddress,
+  //       "getOwners",
+  //       {}
+  //     ),
+  //   });
+  //   setOwners(data as any);
+  //   console.log(data);
+  //   console.log("error", error);
+  // };
+
+  // const {
+  //   data: ownersData,
+  //   error: ownersError,
+  //   isFetching: ownersIsFetching,
+  //   fetch: ownersFetch
+  // } = useMoralisQuery("MultiSigWallet", (query) =>
+  //   query.equalTo("Wallet")
+  // )
+
+  //Not Auto Refreshing
+  const onDeleteOwner = (toRemoveOwner) => {
+    console.log(toRemoveOwner) //Not Passing In Properly
+    const newOwners = owners.filter(owner => owner != '0xC') // Replace with toRemoveOwner
+    wallet.set("walletOwners", newOwners)
+    wallet.save()
+  }
+
+  useEffect(() => {
+    setOwners(wallet.get("walletOwners"))
+    setPercentageConfirmation(wallet.get("percentageConfirmation"))
+  }, [])
 
   return (
     <div className={styles.wallet}>
@@ -44,6 +69,7 @@ const Wallet = ({ wallet }: { wallet: any }) => {
       <p>
         <b>Owners:</b>
       </p>
+      { /*
       <button
         className="btn btn-secondary"
         type="button"
@@ -51,6 +77,7 @@ const Wallet = ({ wallet }: { wallet: any }) => {
       >
         Fetch owners
       </button>
+      */ }
       {owners &&
         owners.map((owner, index) => (
           <DataRow
@@ -60,9 +87,9 @@ const Wallet = ({ wallet }: { wallet: any }) => {
             clickHandler={onDeleteOwner}
           />
         ))}
-      <OwnerModalForm />
+      <OwnerModalForm wallet = {wallet} owners = {owners}/>
       <p>
-        <b>Percentage confirmation:</b> 50%
+        <b>Percentage confirmation:</b> {percentageConfirmation}
       </p>
       <p>
         <b>Active transactions:</b>

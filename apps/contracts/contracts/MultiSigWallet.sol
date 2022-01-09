@@ -25,6 +25,7 @@ contract MultiSigWallet {
   uint256 public percentConfirmationsRequired;
 
   struct Transaction {
+    address from;
     address to;
     uint256 value;
     bytes data;
@@ -98,6 +99,7 @@ contract MultiSigWallet {
   }
 
   function submitTransaction(
+    address _from,
     address _to,
     uint256 _value,
     bytes memory _data
@@ -106,6 +108,7 @@ contract MultiSigWallet {
 
     transactions.push(
       Transaction({
+        from: _from,
         to: _to,
         value: _value,
         data: _data,
@@ -185,6 +188,7 @@ contract MultiSigWallet {
     public
     view
     returns (
+      address from,
       address to,
       uint256 value,
       bytes memory data,
@@ -195,6 +199,7 @@ contract MultiSigWallet {
     Transaction storage transaction = transactions[_txIndex];
 
     return (
+      transaction.from,
       transaction.to,
       transaction.value,
       transaction.data,

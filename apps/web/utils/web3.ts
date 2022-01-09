@@ -113,6 +113,8 @@ export const walletFactoryAddress =
 //   }
 // };
 
+//Wallet Factory Interfaces
+
 export const createWalletFactoryOptions = (
   functionName: string,
   args: Record<string, any>
@@ -124,6 +126,8 @@ export const createWalletFactoryOptions = (
     params: args,
   };
 };
+
+//Wallet Interfaces (Should not be exposed)
 
 export const createWalletOptions = (
   walletAddress: string,
