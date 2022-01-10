@@ -1,5 +1,5 @@
-// make sure to deploy the contracts before running the frontend
 import Wallet from "../../contracts/artifacts/contracts/MultiSigWallet.sol/MultiSigWallet.json";
+// make sure to deploy the contracts before running the frontend
 import WalletFactory from "../../contracts/artifacts/contracts/MultiSigWalletFactory.sol/MultiSigWalletFactory.json";
 export const walletFactoryAddress =
   "0x5FbDB2315678afecb367f032d93F642f64180aa3";
@@ -113,9 +113,11 @@ export const walletFactoryAddress =
 //   }
 // };
 
-export const walletFactoryOptions = (
+//Wallet Factory Interfaces
+
+export const createWalletFactoryOptions = (
   functionName: string,
-  args?: Record<string, any>
+  args: Record<string, any>
 ) => {
   return {
     abi: WalletFactory.abi,
@@ -125,7 +127,9 @@ export const walletFactoryOptions = (
   };
 };
 
-export const walletOptions = (
+//Wallet Interfaces (Should not be exposed)
+
+export const createWalletOptions = (
   walletAddress: string,
   functionName: string,
   args: Record<string, any>

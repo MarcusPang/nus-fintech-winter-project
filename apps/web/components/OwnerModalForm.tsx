@@ -1,12 +1,16 @@
 import { useState } from "react";
 import styles from '../styles/FullWidthButton.module.css';
 
-function addOwner () {
-
-}
-
-const OwnerModalForm = (props) => {
+const OwnerModalForm = ( {wallet , owners} ) => {
   const [userAccount, setUserAccount] = useState("");
+
+  console.log(wallet);
+
+  const addOwner = () => {
+    owners.push(userAccount)
+    wallet.set("walletOwners", owners);
+    wallet.save()
+  }
 
   return (
     <div>

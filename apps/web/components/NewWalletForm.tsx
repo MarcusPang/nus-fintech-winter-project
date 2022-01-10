@@ -1,26 +1,48 @@
-import { useState } from "react";
-import { useNewMoralisObject, useWeb3ExecuteFunction } from "react-moralis";
+import { useState, useCallback } from "react";
+import {
+  useMoralis,
+  useNewMoralisObject,
+  // useWeb3ExecuteFunction,
+} from "react-moralis";
 import styles from "../styles/NewWalletForm.module.css";
-import { walletFactoryOptions } from "../utils/web3";
+// import { createWalletFactoryOptions } from "../utils/web3";
+
+// so typescript doesn't give an error for window.ethereum
+declare global {
+  interface Window {
+    ethereum: any;
+  }
+}
 
 const NewWalletForm = () => {
   const [userAccount, setUserAccount] = useState("");
   const [percentage, setPercentage] = useState(0);
 
-  const { data, error, fetch, isFetching, isLoading } =
-    useWeb3ExecuteFunction();
-  const { isSaving, error: walletError, save } = useNewMoralisObject("Wallet");
+  const { user } = useMoralis();
+  // const { data :create, error, fetch, isFetching, isLoading } =
+  //   useWeb3ExecuteFunction();
+  const {
+    isSaving,
+    error: multiSigWalletError,
+    save,
+  } = useNewMoralisObject("MultiSigWallet");
 
   const createWallet = async () => {
-    if (!isLoading)
-      await fetch({
-        params: walletFactoryOptions("createWallet", {
-          _owners: userAccount.split(","),
-          _percentConfirmationsRequired: percentage,
-        }),
+    // if (!isLoading) {
+    //   await fetch({
+    //     params: createWalletFactoryOptions("createWallet", {
+    //       _owners: userAccount.split(","),
+    //       _percentConfirmationsRequired: percentage,
+    //     }),
+    //   });
+    // }
+    if (!multiSigWalletError && !isSaving) {
+      await save({
+        walletCreator: user.get("ethAddress"),
+        walletOwners: userAccount.split(","),
+        percentageConfirmation: percentage,
       });
-    if (!error && !isFetching)
-      await save({ walletCreator: userAccount, walletAddress: userAccount });
+    }
   };
 
   // console.log("[wallet data]:", data);
@@ -47,7 +69,7 @@ const NewWalletForm = () => {
           <button
             className="btn btn-secondary"
             onClick={() => createWallet()}
-            disabled={isFetching}
+            disabled={isSaving}
           >
             Create Wallet
           </button>
