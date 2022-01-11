@@ -11,7 +11,7 @@ const MyWalletsComponent = () => {
     isFetching: walletIsFetching,
     fetch: walletFetch,
   } = useMoralisQuery("MultiSigWallet", (query) =>
-    query.equalTo("walletCreator", user.get("ethAddress"))
+    query.equalTo("walletCreator", user.get("ethAddress")) //this should be checking whether user is inside walletOwners instead of walletCreator right
   ); 
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const MyWalletsComponent = () => {
     console.error(walletError);
   }, [walletFetch]);
 
-  // console.log(walletData);
+  console.log('walletData in mywallets', walletData);
 
   return (
     <div>

@@ -3,12 +3,9 @@ import React, { useState } from "react";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import { Web3Provider } from "react-moralis/lib/hooks/core/useMoralis/_useMoralisWeb3";
 import HomeImg from "../assets/home_image.jpeg";
-import MyWalletsComponent from "../components/MyWalletsComponent";
-import NewWalletForm from "../components/NewWalletForm";
-import UserHeader from "../components/UserHeader";
-import WalletExplanation from "../components/WalletExplanation";
 import styles from "../styles/index.module.css";
 import { walletFactoryOptions } from "../utils/web3";
+import Content from '../components/Content';
 
 // so typescript doesn't give an error for window.ethereum
 declare global {
@@ -39,9 +36,9 @@ const connectors: {
 
 const Homepage = () => {
   const [walletIndex, setWalletIndex] = useState(0);
-  const { authenticate, isAuthenticated } = useMoralis();
+  const { authenticate, isAuthenticated, user } = useMoralis();
   const { data, error, fetch } = useWeb3ExecuteFunction();
-
+  
   const printWallet = async () => {
     await fetch({
       params: walletFactoryOptions("wallets", {
@@ -49,8 +46,6 @@ const Homepage = () => {
       }),
     });
   };
-
-  console.log(data);
 
   if (!isAuthenticated) {
     return (
@@ -86,27 +81,16 @@ const Homepage = () => {
     );
   }
 
-  return (
-    <div>
-      <div className={styles.background}>
-        <div className={styles.header}></div>
-        <div className={styles.content}>
-          <UserHeader />
-          <WalletExplanation />
-          <NewWalletForm />
-          <MyWalletsComponent />
-          <div className={styles.testing}>
-            <p>For dev testing only:</p>
-            <input
-              onChange={(e) => setWalletIndex(+e.target.value)}
-              placeholder="Wallet index"
-            />
-            <button onClick={printWallet}>Print wallets</button>
+    return (
+      <div>
+        <div className={styles.background}>
+          <div className={styles.header}></div>
+          <div className={styles.sideBarAndContent}>
+            <Content />
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default Homepage;

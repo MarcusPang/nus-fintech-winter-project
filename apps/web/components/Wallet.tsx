@@ -55,16 +55,19 @@ const Wallet = ({ wallet }: { wallet: any }) => {
     wallet.save()
   }
 
+  // console.log('wallet in wallet', wallet)
+
   useEffect(() => {
     setOwners(wallet.get("walletOwners"))
+    console.log('getOwners', wallet.get("walletOwners"))
     setPercentageConfirmation(wallet.get("percentageConfirmation"))
   }, [])
 
   return (
     <div className={styles.wallet}>
       <h3>
-        <b>Wallet Address: </b>
-        {wallet.attributes.walletAddress}
+        <b>Wallet Creator: </b>
+        {wallet.attributes.walletCreator}
       </h3>
       <p>
         <b>Owners:</b>
@@ -84,7 +87,7 @@ const Wallet = ({ wallet }: { wallet: any }) => {
             text={owner}
             buttonText="Delete"
             key={index}
-            clickHandler={onDeleteOwner}
+            clickHandler={() => onDeleteOwner(owner)}
           />
         ))}
       <OwnerModalForm wallet = {wallet} owners = {owners}/>
