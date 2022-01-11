@@ -61,7 +61,7 @@ const Wallet = ({ wallet }: { wallet: any }) => {
     setOwners(wallet.get("walletOwners"))
     console.log('getOwners', wallet.get("walletOwners"))
     setPercentageConfirmation(wallet.get("percentageConfirmation"))
-  }, [])
+  }, [wallet])
 
   return (
     <div className={styles.wallet}>

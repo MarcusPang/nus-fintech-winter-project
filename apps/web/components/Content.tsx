@@ -41,7 +41,7 @@ const Content = () => {
   useEffect(() => {
     walletFetch();
     console.log('data in index.tsx 1', walletData);
-  }, [walletFetch]);
+  }, [walletData, walletFetch]);
   
   const printWallet = async () => {
     await fetch({

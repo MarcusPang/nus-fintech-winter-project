@@ -17,7 +17,7 @@ const MyWalletsComponent = () => {
   useEffect(() => {
     walletFetch();
     console.error(walletError);
-  }, [walletFetch]);
+  }, [walletFetch, walletError]);
 
   console.log('walletData in mywallets', walletData);
 
