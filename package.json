@@ -33,12 +33,11 @@
         "outputs": []
       },
       "dev": {
-        "dependsOn": ["contracts#dev"],
+        "dependsOn": [
+          "contracts#dev"
+        ],
         "cache": false
       }
     }
-  },
-  "dependencies": {
-    "react-toastify": "^8.1.0"
   }
 }

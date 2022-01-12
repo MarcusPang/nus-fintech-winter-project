@@ -1,4 +1,3 @@
-import WalletExplanationImg from "../assets/wallet_explanation.png";
 import Image from "next/image";
 import styles from "../styles/WalletExplanation.module.css";
 
@@ -18,13 +17,14 @@ const WalletExplanation = () => {
         </button>
       </p>
       <div className="collapse" id="walletExplanation"> */}
-        <div className={styles.imageDiv}>
-          <Image
-            src={WalletExplanationImg}
-            alt="Multi-Signature Wallet Explanation"
-            layout="intrinsic"
-          />
-        </div>
+      <div className={styles.imageDiv}>
+        <Image
+          src="/wallet_explanation.png"
+          alt="Multi-Signature Wallet Explanation"
+          width="832"
+          height="642"
+        />
+      </div>
       {/* </div> */}
     </div>
   );

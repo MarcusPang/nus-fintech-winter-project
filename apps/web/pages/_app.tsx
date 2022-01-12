@@ -1,9 +1,9 @@
+// Add bootstrap css
+import "bootstrap/dist/css/bootstrap.css";
 import type { AppProps } from "next/app";
-import { useEffect } from 'react'
+import { useEffect } from "react";
 import { MoralisProvider } from "react-moralis";
-
-// Add bootstrap css 
-import 'bootstrap/dist/css/bootstrap.css'
+import "react-toastify/dist/ReactToastify.css";
 
 const App = ({ Component, pageProps }: AppProps) => {
   // Import bootstrap when mounted

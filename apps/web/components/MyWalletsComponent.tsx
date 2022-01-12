@@ -9,21 +9,22 @@ import { createWalletFactoryOptions } from "../utils/web3";
 
 const MyWalletsComponent = () => {
   const { user } = useMoralis();
-  const {
-    data: walletData,
-    error: walletError,
-    isFetching: walletIsFetching,
-    fetch: walletFetch,
-  } = useMoralisQuery("MultiSigWallet", (query) =>
-    query.equalTo("walletCreator", user.get("ethAddress")) //this should be checking whether user is inside walletOwners instead of walletCreator right
-  ); 
+  // const {
+  //   data: walletData,
+  //   error: walletError,
+  //   isFetching: walletIsFetching,
+  //   fetch: walletFetch,
+  // } = useMoralisQuery(
+  //   "MultiSigWallet",
+  //   (query) => query.equalTo("walletCreator", user.get("ethAddress")) //this should be checking whether user is inside walletOwners instead of walletCreator right
+  // );
 
-  useEffect(() => {
-    walletFetch();
-    console.error(walletError);
-  }, [walletFetch, walletError]);
+  // useEffect(() => {
+  //   walletFetch();
+  //   console.error(walletError);
+  // }, [walletFetch, walletError]);
 
-  console.log('walletData in mywallets', walletData);
+  // console.log("walletData in mywallets", walletData);
 
   return (
     <div>

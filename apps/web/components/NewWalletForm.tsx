@@ -31,8 +31,9 @@ const NewWalletForm = () => {
         ),
         _percentConfirmationsRequired: percentage,
       }),
+      onError: (error) => console.error(error),
+      onSuccess: (results) => console.log("[Create wallet]: ", results),
     });
-    if (error) console.error(error);
   };
 
   // TODO add checks for user input and error handling

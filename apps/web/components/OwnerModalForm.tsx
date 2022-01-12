@@ -1,13 +1,30 @@
 import { useState } from "react";
+import { useWeb3ExecuteFunction } from "react-moralis";
 import styles from "../styles/FullWidthButton.module.css";
+import { createWalletFactoryOptions } from "../utils/web3";
 
-const OwnerModalForm = ({ wallet, owners }) => {
+const OwnerModalForm = ({
+  wallet,
+  owners,
+}: {
+  wallet: string;
+  owners: string[];
+}) => {
   const [userAccount, setUserAccount] = useState("");
+  const { fetch } = useWeb3ExecuteFunction();
 
-  const addOwner = () => {
-    owners.push(userAccount);
-    wallet.set("walletOwners", owners);
-    wallet.save();
+  const addOwner = async () => {
+    await fetch({
+      params: createWalletFactoryOptions("addOwner", {
+        wallet,
+        newOwner: userAccount,
+      }),
+      onError: (e) => console.error(e),
+      onSuccess: (results) => {
+        console.log("Successfully added ", userAccount);
+        console.log("[results]: ", results);
+      },
+    });
   };
 
   return (

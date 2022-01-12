@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 
 contract MultiSigWallet {
-    //Events
+    // Events
     event Deposit(address indexed sender, uint256 amount, uint256 balance);
     event SubmitTransaction(
         address indexed owner,
@@ -19,7 +19,7 @@ contract MultiSigWallet {
     event AddOwner(address indexed owner, uint256 indexed owIndex);
     event RemoveOwner(address indexed owner);
 
-    //Variables & Mappings
+    // Variables & Mappings
     address[] public owners;
     mapping(address => bool) public isOwner;
     uint256 public percentConfirmationsRequired;

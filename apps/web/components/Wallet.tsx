@@ -1,72 +1,64 @@
-import { useState, useEffect } from "react";
-import { useMoralis, useMoralisQuery, useWeb3ExecuteFunction } from "react-moralis";
+import { useEffect, useState } from "react";
+import { useWeb3ExecuteFunction } from "react-moralis";
 import styles from "../styles/Wallet.module.css";
-import { createWalletOptions } from "../utils/web3";
+import { createWalletFactoryOptions } from "../utils/web3";
 import DataRow from "./DataRow";
 import OwnerModalForm from "./OwnerModalForm";
 import TransactionModalForm from "./TransactionModalForm";
 
-// const owners = ["0xSAM", "0xTIM", "0xLINDA"];
 const transactions = [
   "Request to send 2 ETH from 0xTIM to 0xJACK",
   "Request to send 1 ETH from 0xSAM to 0xJACK",
   "Request to send 500 ETH from 0xSAM to 0xLILY",
 ];
 
-// function onDeleteOwner() {}
-
 function onApproveTransaction() {}
 
-const Wallet = ({ wallet }: { wallet: any }) => {
-
-  const [owners, setOwners] = useState([]);
+const Wallet = ({ wallet }: { wallet: string }) => {
+  const [owners, setOwners] = useState<string[]>([]);
   const [percentageConfirmation, setPercentageConfirmation] = useState(0);
-  
-  const { data, error, fetch, isFetching, isLoading } =
-    useWeb3ExecuteFunction();
-  // const fetchOwners = async () => {
-  //   await fetch({
-  //     params: createWalletOptions(
-  //       wallet.attributes.walletAddress,
-  //       "getOwners",
-  //       {}
-  //     ),
-  //   });
-  //   setOwners(data as any);
-  //   console.log(data);
-  //   console.log("error", error);
-  // };
+  const { fetch: ownerFetch } = useWeb3ExecuteFunction();
+  const { fetch: removeOwnerFetch } = useWeb3ExecuteFunction();
 
-  // const {
-  //   data: ownersData,
-  //   error: ownersError,
-  //   isFetching: ownersIsFetching,
-  //   fetch: ownersFetch
-  // } = useMoralisQuery("MultiSigWallet", (query) =>
-  //   query.equalTo("Wallet")
-  // )
+  const fetchOwners = async () => {
+    await ownerFetch({
+      params: createWalletFactoryOptions("getOwners", {
+        wallet,
+      }),
+      onError: (e) => console.error(e),
+      onSuccess: (results) => {
+        console.log("[Owners]: ", results);
+        setOwners(results as string[]);
+      },
+    });
+  };
 
-  //Not Auto Refreshing
-  const onDeleteOwner = (toRemoveOwner) => {
-    console.log(toRemoveOwner) //Not Passing In Properly
-    const newOwners = owners.filter(owner => owner != '0xC') // Replace with toRemoveOwner
-    wallet.set("walletOwners", newOwners)
-    wallet.save()
-  }
-
-  // console.log('wallet in wallet', wallet)
+  const deleteOwner = async (owner: string) => {
+    await removeOwnerFetch({
+      params: createWalletFactoryOptions("removeOwner", {
+        wallet,
+        existingOwner: owner,
+      }),
+      onError: (e) => console.error(e),
+      onSuccess: (results) => {
+        console.log("Successfully deleted ", owner);
+        console.log("[results]: ", results);
+      },
+    });
+  };
 
   useEffect(() => {
-    setOwners(wallet.get("walletOwners"))
-    console.log('getOwners', wallet.get("walletOwners"))
-    setPercentageConfirmation(wallet.get("percentageConfirmation"))
-  }, [wallet])
+    fetchOwners();
+    // setOwners(wallet.get("walletOwners"));
+    // console.log("getOwners", wallet.get("walletOwners"));
+    // setPercentageConfirmation(wallet.get("percentageConfirmation"));
+  }, []);
 
   return (
     <div className={styles.wallet}>
       <h3>
         <b>Wallet Creator: </b>
-        {wallet.attributes.walletCreator}
+        {/* {wallet.attributes.walletCreator} */}
       </h3>
       <p>
         <b>Owners:</b>
@@ -77,10 +69,10 @@ const Wallet = ({ wallet }: { wallet: any }) => {
             text={owner}
             buttonText="Delete"
             key={index}
-            clickHandler={() => onDeleteOwner(owner)}
+            clickHandler={() => deleteOwner(owner)}
           />
         ))}
-      <OwnerModalForm wallet = {wallet} owners = {owners}/>
+      <OwnerModalForm wallet={wallet} owners={owners} />
       <p>
         <b>Percentage confirmation:</b> {percentageConfirmation}
       </p>
