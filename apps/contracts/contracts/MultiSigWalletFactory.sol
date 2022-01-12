@@ -7,8 +7,14 @@ pragma solidity ^0.8.0;
 import "./MultiSigWallet.sol";
 
 contract MultiSigWalletFactory {
-  MultiSigWallet[] public wallets;
+  mapping(address => MultiSigWallet[]) public wallets;
+  mapping(address => bool) alreadyHasWallet;
 
+  function getWallets(address _owner) public returns (MultiSigWallet[] memory) {
+    return wallets[_owner];
+  }
+
+  // msg.sender is automatically added on frontend into _owners
   function createWallet(
     address[] memory _owners,
     uint256 _percentConfirmationsRequired
@@ -17,11 +23,15 @@ contract MultiSigWalletFactory {
       _owners,
       _percentConfirmationsRequired
     );
-    wallets.push(wallet);
+    if (alreadyHasWallet[msg.sender]) {
+      wallets[msg.sender].push(wallet);
+    } else {
+      alreadyHasWallet[msg.sender] = true;
+      wallets[msg.sender] = [wallet];
+    }
   }
 
   //Expose wallet interfaces
-
   //Should take in wallet address instead of wallet?
   function addOwner(MultiSigWallet wallet, address newOwner) public {
     wallet.addOwner(newOwner);

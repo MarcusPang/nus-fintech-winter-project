@@ -1,8 +1,7 @@
 import Wallet from "../../contracts/artifacts/contracts/MultiSigWallet.sol/MultiSigWallet.json";
 // make sure to deploy the contracts before running the frontend
 import WalletFactory from "../../contracts/artifacts/contracts/MultiSigWalletFactory.sol/MultiSigWalletFactory.json";
-export const walletFactoryAddress =
-  "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+export const walletFactoryAddress = process.env.NEXT_PUBLIC_WALLET_FACTORY_ADDRESS;
 
 // export const requestAccount = async () => {
 //   // request from metamask the user account

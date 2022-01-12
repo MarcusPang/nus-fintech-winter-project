@@ -1,10 +1,7 @@
-import { useState, useCallback } from "react";
-import {
-  useMoralis,
-  useNewMoralisObject,
-  // useWeb3ExecuteFunction,
-} from "react-moralis";
+import { useState } from "react";
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import styles from "../styles/NewWalletForm.module.css";
+import { createWalletFactoryOptions } from "../utils/web3";
 // import { createWalletFactoryOptions } from "../utils/web3";
 
 // so typescript doesn't give an error for window.ethereum
@@ -17,36 +14,28 @@ declare global {
 const NewWalletForm = () => {
   const [userAccount, setUserAccount] = useState("");
   const [percentage, setPercentage] = useState(0);
-
   const { user } = useMoralis();
-  // const { data :create, error, fetch, isFetching, isLoading } =
-  //   useWeb3ExecuteFunction();
-  const {
-    isSaving,
-    error: multiSigWalletError,
-    save,
-  } = useNewMoralisObject("MultiSigWallet");
+  const { isLoading, error, fetch } = useWeb3ExecuteFunction();
 
+  // pass current user's address and list of owners specified
   const createWallet = async () => {
-    // if (!isLoading) {
-    //   await fetch({
-    //     params: createWalletFactoryOptions("createWallet", {
-    //       _owners: userAccount.split(","),
-    //       _percentConfirmationsRequired: percentage,
-    //     }),
-    //   });
-    // }
-    if (!multiSigWalletError && !isSaving) {
-      await save({
-        walletCreator: user.get("ethAddress"),
-        walletOwners: userAccount.split(","),
-        percentageConfirmation: percentage,
-      });
-    }
+    await fetch({
+      params: createWalletFactoryOptions("createWallet", {
+        _owners: Array.from(
+          new Set(
+            userAccount
+              .split(",")
+              .concat(user.get("ethAddress"))
+              .map((item) => item.toLowerCase())
+          )
+        ),
+        _percentConfirmationsRequired: percentage,
+      }),
+    });
+    if (error) console.error(error);
   };
 
-  // console.log("[wallet data]:", data);
-
+  // TODO add checks for user input and error handling
   return (
     <div>
       <div className={styles.createNewWallet}>
@@ -68,8 +57,8 @@ const NewWalletForm = () => {
         <div className={styles.formElems}>
           <button
             className="btn btn-secondary"
-            onClick={() => createWallet()}
-            disabled={isSaving}
+            onClick={createWallet}
+            disabled={isLoading}
           >
             Create Wallet
           </button>

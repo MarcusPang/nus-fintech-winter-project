@@ -8,7 +8,7 @@ import NewWalletForm from "../components/NewWalletForm";
 import UserHeader from "../components/UserHeader";
 import WalletExplanation from "../components/WalletExplanation";
 import styles from "../styles/index.module.css";
-import { walletFactoryOptions } from "../utils/web3";
+import { createWalletFactoryOptions } from "../utils/web3";
 
 // so typescript doesn't give an error for window.ethereum
 declare global {
@@ -39,18 +39,17 @@ const connectors: {
 
 const Homepage = () => {
   const [walletIndex, setWalletIndex] = useState(0);
-  const { authenticate, isAuthenticated } = useMoralis();
+  const { authenticate, isAuthenticated, isWeb3Enabled } = useMoralis();
   const { data, error, fetch } = useWeb3ExecuteFunction();
 
   const printWallet = async () => {
     await fetch({
-      params: walletFactoryOptions("wallets", {
+      params: createWalletFactoryOptions("wallets", {
         "": walletIndex,
       }),
+      onError: (e) => console.error(e),
     });
   };
-
-  console.log(data);
 
   if (!isAuthenticated) {
     return (
@@ -85,7 +84,6 @@ const Homepage = () => {
       </div>
     );
   }
-
   return (
     <div>
       <div className={styles.background}>

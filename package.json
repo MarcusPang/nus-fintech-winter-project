@@ -33,6 +33,7 @@
         "outputs": []
       },
       "dev": {
+        "dependsOn": ["contracts#dev"],
         "cache": false
       }
     }

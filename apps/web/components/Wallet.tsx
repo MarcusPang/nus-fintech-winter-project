@@ -24,7 +24,6 @@ const Wallet = ({ wallet }: { wallet: any }) => {
   
   const { data, error, fetch, isFetching, isLoading } =
     useWeb3ExecuteFunction();
-
   // const fetchOwners = async () => {
   //   await fetch({
   //     params: createWalletOptions(
@@ -69,15 +68,6 @@ const Wallet = ({ wallet }: { wallet: any }) => {
       <p>
         <b>Owners:</b>
       </p>
-      { /*
-      <button
-        className="btn btn-secondary"
-        type="button"
-        onClick={() => fetchOwners()}
-      >
-        Fetch owners
-      </button>
-      */ }
       {owners &&
         owners.map((owner, index) => (
           <DataRow
