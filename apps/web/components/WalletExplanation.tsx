@@ -5,7 +5,7 @@ import styles from "../styles/WalletExplanation.module.css";
 const WalletExplanation = () => {
   return (
     <div>
-      <p>
+      {/* <p>
         <button
           className="btn btn-secondary"
           type="button"
@@ -17,7 +17,7 @@ const WalletExplanation = () => {
           Multi Sig Wallet Explanation
         </button>
       </p>
-      <div className="collapse" id="walletExplanation">
+      <div className="collapse" id="walletExplanation"> */}
         <div className={styles.imageDiv}>
           <Image
             src={WalletExplanationImg}
@@ -25,7 +25,7 @@ const WalletExplanation = () => {
             layout="intrinsic"
           />
         </div>
-      </div>
+      {/* </div> */}
     </div>
   );
 };
