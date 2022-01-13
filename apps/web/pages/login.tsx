@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { Web3Provider } from "react-moralis/lib/hooks/core/useMoralis/_useMoralisWeb3";
-import { toast } from "react-toastify";
 
 const connectors: {
   title: string;
