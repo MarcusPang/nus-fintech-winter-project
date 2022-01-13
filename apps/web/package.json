@@ -6,12 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "dev:cloud": "dotenv -- cross-var moralis-admin-cli watch-cloud-folder --moralisApiKey %MORALIS_API_KEY%  --moralisApiSecret %MORALIS_API_SECRET% --moralisSubdomain %MORALIS_SUBDOMAIN% --autoSave 1 --moralisCloudfolder ./cloud",
     "lint": "next lint"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.2",
     "@walletconnect/web3-provider": "^1.7.0",
     "bootstrap": "^5.1.3",
+    "cross-var": "^1.1.0",
+    "dotenv-cli": "^4.1.1",
     "moralis": "^0.0.183",
     "next": "12.0.5",
     "react": "^17.0.2",

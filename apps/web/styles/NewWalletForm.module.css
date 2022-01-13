@@ -2,10 +2,12 @@
   margin: 1rem;
   padding: 1rem;
   border-radius: 10px;
-  background: #f7f5f5;;
+  background: #f7f5f5;
+  ;
   box-shadow: 5px 5px 5px lightgrey;
   display: flex;
   flex-direction: column;
+  border: 1px solid darkgray;
 }
 
 .formElems {
@@ -13,6 +15,7 @@
   margin: 0.5rem 0;
 }
 
-.formElems input, .formElems button {
+.formElems input,
+.formElems button {
   width: 100%;
 }

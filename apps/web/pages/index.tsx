@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { useMoralis } from "react-moralis";
+import { useMoralis, useMoralisCloudFunction } from "react-moralis";
 import Layout from "../components/Layout/Layout";
 import UserHeader from "../components/Home/UserHeader";
 import WalletExplanation from "../components/Home/WalletExplanation";

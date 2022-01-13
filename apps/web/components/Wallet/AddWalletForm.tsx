@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+import {
+  useMoralis,
+  useNewMoralisObject,
+  useWeb3ExecuteFunction,
+} from "react-moralis";
 import styles from "../../styles/NewWalletForm.module.css";
 import { createWalletFactoryOptions } from "../../utils/web3";
 
@@ -7,24 +11,33 @@ const NewWalletForm = () => {
   const [userAccount, setUserAccount] = useState("");
   const [percentage, setPercentage] = useState(0);
   const { user } = useMoralis();
-  const { isLoading, error, fetch } = useWeb3ExecuteFunction();
+  const { isLoading, fetch } = useWeb3ExecuteFunction();
+  const { save } = useNewMoralisObject("MultiSigWallet");
 
   // pass current user's address and list of owners specified
   const createWallet = async () => {
+    const userAddress = user.get("ethAddress");
+    const owners = Array.from(
+      new Set(
+        userAccount
+          .split(",")
+          .concat(userAddress)
+          .map((item) => item.toLowerCase())
+      )
+    );
     await fetch({
       params: createWalletFactoryOptions("createWallet", {
-        _owners: Array.from(
-          new Set(
-            userAccount
-              .split(",")
-              .concat(user.get("ethAddress"))
-              .map((item) => item.toLowerCase())
-          )
-        ),
+        _owners: owners,
         _percentConfirmationsRequired: percentage,
       }),
       onError: (error) => console.error(error),
       onSuccess: (results) => console.log("[Create wallet]: ", results),
+    });
+    await save({
+      walletAddress: "test",
+      creator: userAddress,
+      owners,
+      percentage,
     });
   };
 

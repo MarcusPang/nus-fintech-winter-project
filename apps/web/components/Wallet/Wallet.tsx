@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useWeb3ExecuteFunction } from "react-moralis";
 import styles from "../../styles/Wallet.module.css";
 import { createWalletFactoryOptions } from "../../utils/web3";
@@ -6,52 +6,65 @@ import DataRow from "../Layout/DataRow";
 import OwnerModalForm from "./AddOwnerModal";
 import TransactionModalForm from "./TransactionModalForm";
 
-const transactions = [
-  "Request to send 2 ETH from 0xTIM to 0xJACK",
-  "Request to send 1 ETH from 0xSAM to 0xJACK",
-  "Request to send 500 ETH from 0xSAM to 0xLILY",
-];
+interface WalletProps {
+  wallet: string;
+  owners: string[];
+}
 
 function onApproveTransaction() {}
 
-const Wallet = ({ wallet }: { wallet: string }) => {
-  const [owners, setOwners] = useState<string[]>([]);
+const Wallet = ({ wallet, owners }: WalletProps) => {
   const [percentageConfirmation, setPercentageConfirmation] = useState(0);
-  const { fetch: ownerFetch } = useWeb3ExecuteFunction();
+  const [transactionCount, setTransactionCount] = useState(0);
+  const [transactions, setTransactions] = useState([]);
+
+  // fetch functions
   const { fetch: removeOwnerFetch } = useWeb3ExecuteFunction();
+  const { fetch: transactionCountFetch } = useWeb3ExecuteFunction();
+  const { fetch: transactionsFetch } = useWeb3ExecuteFunction();
 
-  const fetchOwners = async () => {
-    await ownerFetch({
-      params: createWalletFactoryOptions("getOwners", {
-        wallet,
-      }),
-      onError: (e) => console.error(e),
-      onSuccess: (results) => {
-        console.log("[Owners]: ", results);
-        setOwners(results as string[]);
-      },
-    });
-  };
-
-  const deleteOwner = async (owner: string) => {
+  const deleteOwner = useCallback(async (owner: string) => {
     await removeOwnerFetch({
       params: createWalletFactoryOptions("removeOwner", {
         wallet,
         existingOwner: owner,
       }),
-      onError: (e) => console.error(e),
+      onError: (e) => console.error("failed to delete owner ", e),
       onSuccess: (results) => {
         console.log("Successfully deleted ", owner);
         console.log("[results]: ", results);
       },
     });
-  };
+  }, []);
+
+  const fetchTransactions = useCallback(async () => {
+    await transactionCountFetch({
+      params: createWalletFactoryOptions("getTransactionCount", {
+        wallet,
+      }),
+      onSuccess: (results) => {
+        console.log("[tx count]: ", results);
+        setTransactionCount(results as number);
+      },
+    });
+    if (transactionCount > 1) {
+      const transactions = new Set();
+      for (let i = 0; i < transactionCount; i++) {
+        await transactionsFetch({
+          params: createWalletFactoryOptions("getTransaction", {
+            wallet,
+            _txIndex: i,
+          }),
+          onSuccess: (results) => transactions.add(results),
+        });
+      }
+      setTransactions(Array.from(transactions));
+      console.log("[txs]: ", Array.from(transactions));
+    }
+  }, []);
 
   useEffect(() => {
-    fetchOwners();
-    // setOwners(wallet.get("walletOwners"));
-    // console.log("getOwners", wallet.get("walletOwners"));
-    // setPercentageConfirmation(wallet.get("percentageConfirmation"));
+    fetchTransactions();
   }, []);
 
   return (

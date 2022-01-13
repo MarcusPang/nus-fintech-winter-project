@@ -6,7 +6,7 @@ const UserHeader = () => {
 
   return (
     <div className={styles.user}>
-      <h1>Welcome {user.get("username")} !</h1>
+      <h1>Welcome {user.get("ethAddress")}!</h1>
       <button
         className="btn btn-secondary"
         onClick={async () => {
