@@ -1,6 +1,6 @@
-import Wallet from "../../contracts/artifacts/contracts/MultiSigWallet.sol/MultiSigWallet.json";
+// import Wallet from "../../contracts/artifacts/contracts/MultiSigWallet.sol/MultiSigWallet.json";
 // make sure to deploy the contracts before running the frontend
-import WalletFactory from "../../contracts/artifacts/contracts/MultiSigWalletFactory.sol/MultiSigWalletFactory.json";
+import WalletFactory from "../contracts/MultiSigWalletFactory.sol/MultiSigWalletFactory.json";
 export const walletFactoryAddress = process.env.NEXT_PUBLIC_WALLET_FACTORY_ADDRESS;
 
 // export const requestAccount = async () => {
