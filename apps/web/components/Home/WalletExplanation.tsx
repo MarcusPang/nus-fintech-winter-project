@@ -1,5 +1,5 @@
 import Image from "next/image";
-import styles from "../styles/WalletExplanation.module.css";
+import styles from "../../styles/WalletExplanation.module.css";
 
 const WalletExplanation = () => {
   return (

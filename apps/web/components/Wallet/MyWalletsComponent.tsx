@@ -5,7 +5,7 @@ import {
   useMoralisQuery,
   useWeb3ExecuteFunction,
 } from "react-moralis";
-import { createWalletFactoryOptions } from "../utils/web3";
+import { createWalletFactoryOptions } from "../../utils/web3";
 
 const MyWalletsComponent = () => {
   const { user } = useMoralis();

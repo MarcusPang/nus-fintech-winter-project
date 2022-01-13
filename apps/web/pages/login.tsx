@@ -1,18 +1,19 @@
 import { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { Web3Provider } from "react-moralis/lib/hooks/core/useMoralis/_useMoralisWeb3";
 import { toast } from "react-toastify";
 
 const connectors: {
   title: string;
-  connectorId?: Web3Provider;
+  connectorId: string;
   priority: number;
 }[] = [
   {
     title: "Metamask",
+    connectorId: "injected",
     priority: 1,
   },
   {
@@ -22,17 +23,28 @@ const connectors: {
   },
   {
     title: "Trust Wallet",
+    connectorId: "injected",
     priority: 3,
   },
 ];
 
 const Login: NextPage = () => {
-  const { authenticate } = useMoralis();
+  const {
+    authenticate,
+    isAuthenticated,
+    isWeb3Enabled,
+    isInitialized,
+    enableWeb3,
+  } = useMoralis();
   const router = useRouter();
-  const loginHandler = async (connectorId: Web3Provider) => {
+  const loginHandler = async (connectorId?: string) => {
     try {
-      await authenticate({ provider: connectorId });
-      window.localStorage.setItem("connectorId", connectorId);
+      if (connectorId) {
+        await authenticate({ provider: connectorId as Web3Provider });
+        window.localStorage.setItem("connectorId", connectorId);
+      } else {
+        await authenticate();
+      }
       router.push("/");
     } catch (e) {
       console.error(e);
@@ -51,15 +63,18 @@ const Login: NextPage = () => {
         layout="fixed"
       />
       <div className="d-flex align-items-center justify-content-center">
-        {connectors.map(({ title, connectorId }, key) => (
-          <button
-            className="btn btn-secondary m-5"
-            key={key}
-            onClick={() => loginHandler(connectorId)}
-          >
-            {title}
-          </button>
-        ))}
+        <button
+          className="btn btn-secondary m-5"
+          onClick={() => loginHandler()}
+        >
+          Metamask
+        </button>
+        <button
+          className="btn btn-secondary m-5"
+          onClick={() => loginHandler("walletconnect")}
+        >
+          WalletConnect
+        </button>
       </div>
     </div>
   );

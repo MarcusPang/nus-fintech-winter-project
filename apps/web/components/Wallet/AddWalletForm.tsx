@@ -1,15 +1,7 @@
 import { useState } from "react";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
-import styles from "../styles/NewWalletForm.module.css";
-import { createWalletFactoryOptions } from "../utils/web3";
-// import { createWalletFactoryOptions } from "../utils/web3";
-
-// so typescript doesn't give an error for window.ethereum
-declare global {
-  interface Window {
-    ethereum: any;
-  }
-}
+import styles from "../../styles/NewWalletForm.module.css";
+import { createWalletFactoryOptions } from "../../utils/web3";
 
 const NewWalletForm = () => {
   const [userAccount, setUserAccount] = useState("");

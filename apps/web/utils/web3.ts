@@ -128,15 +128,15 @@ export const createWalletFactoryOptions = (
 
 //Wallet Interfaces (Should not be exposed)
 
-export const createWalletOptions = (
-  walletAddress: string,
-  functionName: string,
-  args: Record<string, any>
-) => {
-  return {
-    abi: Wallet.abi,
-    contractAddress: walletAddress,
-    functionName: functionName,
-    params: args,
-  };
-};
+// export const createWalletOptions = (
+//   walletAddress: string,
+//   functionName: string,
+//   args: Record<string, any>
+// ) => {
+//   return {
+//     abi: Wallet.abi,
+//     contractAddress: walletAddress,
+//     functionName: functionName,
+//     params: args,
+//   };
+// };

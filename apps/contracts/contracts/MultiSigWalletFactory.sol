@@ -35,11 +35,11 @@ contract MultiSigWalletFactory {
   //Expose wallet interfaces
   //Should take in wallet address instead of wallet?
   function addOwner(MultiSigWallet wallet, address newOwner) public {
-    wallet.addOwner(newOwner);
+    wallet.addOwner(newOwner, msg.sender);
   }
 
   function removeOwner(MultiSigWallet wallet, address existingOwner) public {
-    wallet.removeOwner(existingOwner);
+    wallet.removeOwner(existingOwner, msg.sender);
   }
 
   function submitTransaction(
@@ -53,15 +53,15 @@ contract MultiSigWalletFactory {
   }
 
   function confirmTransaction(MultiSigWallet wallet, uint256 _txIndex) public {
-    wallet.confirmTransaction(_txIndex);
+    wallet.confirmTransaction(_txIndex, msg.sender);
   }
 
   function executeTransaction(MultiSigWallet wallet, uint256 _txIndex) public {
-    wallet.executeTransaction(_txIndex);
+    wallet.executeTransaction(_txIndex, msg.sender);
   }
 
   function revokeConfirmation(MultiSigWallet wallet, uint256 _txIndex) public {
-    wallet.revokeConfirmation(_txIndex);
+    wallet.revokeConfirmation(_txIndex, msg.sender);
   }
 
   function getOwners(MultiSigWallet wallet)

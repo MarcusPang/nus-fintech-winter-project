@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useWeb3ExecuteFunction } from "react-moralis";
-import styles from "../styles/Wallet.module.css";
-import { createWalletFactoryOptions } from "../utils/web3";
-import DataRow from "./DataRow";
-import OwnerModalForm from "./OwnerModalForm";
+import styles from "../../styles/Wallet.module.css";
+import { createWalletFactoryOptions } from "../../utils/web3";
+import DataRow from "../Layout/DataRow";
+import OwnerModalForm from "./AddOwnerModal";
 import TransactionModalForm from "./TransactionModalForm";
 
 const transactions = [

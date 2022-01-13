@@ -1,45 +1,25 @@
 import { useState } from "react";
-import { useWeb3ExecuteFunction } from "react-moralis";
-import styles from "../styles/FullWidthButton.module.css";
-import { createWalletFactoryOptions } from "../utils/web3";
+import styles from "../../styles/FullWidthButton.module.css";
 
-const OwnerModalForm = ({
-  wallet,
-  owners,
-}: {
-  wallet: string;
-  owners: string[];
-}) => {
+function submitTxn() {}
+
+const TransactionModalForm = (props) => {
   const [userAccount, setUserAccount] = useState("");
-  const { fetch } = useWeb3ExecuteFunction();
-
-  const addOwner = async () => {
-    await fetch({
-      params: createWalletFactoryOptions("addOwner", {
-        wallet,
-        newOwner: userAccount,
-      }),
-      onError: (e) => console.error(e),
-      onSuccess: (results) => {
-        console.log("Successfully added ", userAccount);
-        console.log("[results]: ", results);
-      },
-    });
-  };
+  const [amount, setAmount] = useState("");
 
   return (
     <div>
       <div
         className="modal fade"
-        id="ownerModal"
-        aria-labelledby="ownerModalLabel"
+        id="txnModal"
+        aria-labelledby="txnModal"
         aria-hidden="true"
       >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="ownerModalLabel">
-                Add Owner
+              <h5 className="modal-title" id="txnModalLabel">
+                Submit New Transaction
               </h5>
               <button
                 type="button"
@@ -49,10 +29,16 @@ const OwnerModalForm = ({
               ></button>
             </div>
             <div className="modal-body">
-              <label>User accounts:</label>
+              <label>Receiving user account:</label>
               <input
                 onChange={(e) => setUserAccount(e.target.value)}
                 placeholder="User account"
+              />
+              <br></br>
+              <label>Amount:</label>
+              <input
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="Amount"
               />
             </div>
             <div className="modal-footer">
@@ -66,9 +52,9 @@ const OwnerModalForm = ({
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={addOwner}
+                onClick={submitTxn}
               >
-                Add Owner
+                Submit
               </button>
             </div>
           </div>
@@ -79,13 +65,13 @@ const OwnerModalForm = ({
           type="button"
           className="btn btn-secondary"
           data-bs-toggle="modal"
-          data-bs-target="#ownerModal"
+          data-bs-target="#txnModal"
         >
-          Add Owner
+          Submit New Transaction
         </button>
       </div>
     </div>
   );
 };
 
-export default OwnerModalForm;
+export default TransactionModalForm;
