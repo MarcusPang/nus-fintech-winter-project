@@ -1,22 +1,24 @@
+import { Button, Stack } from "react-bootstrap";
 import { useMoralis } from "react-moralis";
-import styles from "../../styles/UserHeader.module.css";
 
 const UserHeader = () => {
   const { user, logout } = useMoralis();
 
   return (
-    <div className={styles.user}>
-      <h1>Welcome {user.get("ethAddress")}!</h1>
-      <button
-        className="btn btn-secondary"
+    <Stack direction="horizontal">
+      <h1>
+        Welcome {user && user.get("ethAddress").substring(0, 30) + "..."}!
+      </h1>
+      <Button
+        className="btn-secondary"
         onClick={async () => {
           await logout();
           window.localStorage.removeItem("connectorId");
         }}
       >
         Logout
-      </button>
-    </div>
+      </Button>
+    </Stack>
   );
 };
 

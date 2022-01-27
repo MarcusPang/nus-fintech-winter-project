@@ -10,7 +10,7 @@
     "node:localhost": "hardhat node",
     "deploy": "hardhat run scripts/deploy.ts --network",
     "proxy": "./frp/frpc.exe -c frp/frpc.ini",
-    "proxy:mac": "./frp_mac/frpc.exe -c frp_mac/frpc.ini",
+    "proxy:mac": "./frp_mac/frpc -c frp_mac/frpc.ini",
     "dev": "concurrently --kill-others-on-fail \"yarn node:localhost\" \"yarn deploy localhost\" \"yarn proxy\"",
     "dev:mac": "concurrently --kill-others-on-fail \"yarn node:localhost\" \"yarn deploy localhost\" \"yarn proxy:mac\"",
     "lint": "yarn lint:ts && yarn lint:sol && yarn format",

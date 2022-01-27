@@ -33,7 +33,6 @@
 - [ ] Send/receive tokens (multi-signature)
 - [x] Sign in/sign out (metamask)
 - [ ] See past transactions
-- [ ] See current value
 - [ ] See all users (like a explorer tool)
 
 # Setup

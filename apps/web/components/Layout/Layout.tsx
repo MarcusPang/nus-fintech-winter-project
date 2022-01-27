@@ -1,26 +1,22 @@
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import styles from "../../styles/index.module.css";
 import { createWalletFactoryOptions } from "../../utils/web3";
+import CustomNavLink from "./CustomNavLink";
 import WalletSidebar from "./SidebarWallet";
 
 const Layout = ({ children }) => {
-  const { user } = useMoralis();
-  const { fetch } = useWeb3ExecuteFunction();
-  const {
-    data: wallets,
-    fetch: walletFetch,
-    isLoading: walletIsLoading,
-  } = useWeb3ExecuteFunction();
-  const { data: walletOwners, fetch: walletOwnerFetch } =
-    useWeb3ExecuteFunction();
+  const { isAuthenticated, isWeb3Enabled, isInitialized, enableWeb3 } =
+    useMoralis();
+  const { fetch: getWallet } = useWeb3ExecuteFunction();
   const [walletIndex, setWalletIndex] = useState(0);
-  const [userWallets, setUserWallets] = useState<string[]>([]);
   const router = useRouter();
 
-  const printWallet = useCallback(async () => {
-    await fetch({
+  const printWallet = useCallback(() => {
+    getWallet({
       params: createWalletFactoryOptions("wallets", {
         "": walletIndex,
       }),
@@ -28,46 +24,51 @@ const Layout = ({ children }) => {
     });
   }, []);
 
-  // get wallets and walletOwners array from chain
   useEffect(() => {
-    walletFetch({
-      params: createWalletFactoryOptions("getWallets", {}),
-    });
-    walletOwnerFetch({
-      params: createWalletFactoryOptions("getWalletCreators", {}),
-    });
-  }, []);
-
-  // filter the wallets array using current user's address
-  useEffect(() => {
-    if (user && wallets && walletOwners) {
-      const userAddress = user.get("ethAddress").toLowerCase();
-
-      const currentWallets = new Set(userWallets);
-      (wallets as string[]).forEach((wallet, index) => {
-        if (walletOwners[index].toLowerCase() === userAddress) {
-          currentWallets.add(wallet);
-        }
-      });
-      setUserWallets(Array.from(currentWallets));
+    if (isInitialized && !isWeb3Enabled && isAuthenticated) {
+      enableWeb3();
     }
-  }, [wallets, walletOwners, user]);
+    if (isInitialized && !isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, isInitialized, isWeb3Enabled]);
 
   return (
-    <div className={styles.sideBarAndContent}>
-      <div className={styles.sideBar}>
-        <button className={styles.sideBarTab} onClick={() => router.push("/")}>
-          Home
-        </button>
-        <WalletSidebar wallets={userWallets} isLoading={walletIsLoading} />
-        <button
-          className={styles.sideBarTab}
-          onClick={() => router.push("/wallet/new")}
-        >
-          Create New Wallet
-        </button>
-      </div>
-      <div className={styles.content}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <Nav
+        style={{
+          height: "100%",
+          boxShadow: "5px 5px 5px lightgrey",
+          background: "#f7f5f5",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "15%",
+          display: "flex",
+          flexDirection: "column",
+          paddingTop: 30,
+          zIndex: 1,
+        }}
+      >
+        <Nav.Item className={styles.sideBarTab}>
+          <CustomNavLink href="/">Home</CustomNavLink>
+        </Nav.Item>
+        <WalletSidebar />
+        <Nav.Item className={styles.sideBarTab}>
+          <CustomNavLink href="/wallet/new">Create New Wallet</CustomNavLink>
+        </Nav.Item>
+      </Nav>
+      <Container
+        className={styles.content}
+        style={{
+          paddingLeft: "12%",
+        }}
+      >
         {children}
         <div className={styles.testing}>
           <p>For dev testing only:</p>
@@ -77,7 +78,7 @@ const Layout = ({ children }) => {
           />
           <button onClick={printWallet}>Print wallets</button>
         </div>
-      </div>
+      </Container>
     </div>
   );
 };

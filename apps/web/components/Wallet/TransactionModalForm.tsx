@@ -1,76 +1,70 @@
+import { ethers } from "ethers";
 import { useState } from "react";
-import styles from "../../styles/FullWidthButton.module.css";
+import { Button, Form, Modal } from "react-bootstrap";
+import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
+import { createWalletFactoryOptions } from "../../utils/web3";
 
-function submitTxn() {}
+interface TransactionModalFormProps {
+  wallet: string;
+}
 
-const TransactionModalForm = (props) => {
+const TransactionModalForm = ({ wallet }: TransactionModalFormProps) => {
+  const { user } = useMoralis();
   const [userAccount, setUserAccount] = useState("");
   const [amount, setAmount] = useState("");
+  const [showModal, setShowModal] = useState(false);
+
+  const { fetch } = useWeb3ExecuteFunction();
+
+  const submitTransaction = () => {
+    fetch({
+      params: createWalletFactoryOptions("submitTransaction", {
+        wallet,
+        _from: user.get("ethAddress"),
+        _to: userAccount,
+        _value: ethers.utils.parseEther(amount),
+        _data: "0x00",
+      }),
+      onSuccess: (res) => console.log(res),
+      onError: (err) => console.error(err),
+    });
+  };
+
+  const handleClose = () => setShowModal(false);
+  const handleOpen = () => setShowModal(true);
 
   return (
-    <div>
-      <div
-        className="modal fade"
-        id="txnModal"
-        aria-labelledby="txnModal"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="txnModalLabel">
-                Submit New Transaction
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              <label>Receiving user account:</label>
-              <input
-                onChange={(e) => setUserAccount(e.target.value)}
-                placeholder="User account"
-              />
-              <br></br>
-              <label>Amount:</label>
-              <input
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="Amount"
-              />
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={submitTxn}
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className={styles.buttonDiv}>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          data-bs-toggle="modal"
-          data-bs-target="#txnModal"
-        >
-          Submit New Transaction
-        </button>
-      </div>
-    </div>
+    <>
+      <Modal tabIndex={-1} show={showModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title id="txnModalLabel">Submit New Transaction</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Label>Receiving user account:</Form.Label>
+          <Form.Control
+            onChange={(e) => setUserAccount(e.target.value)}
+            className="mb-2"
+            placeholder="User account"
+          />
+          <Form.Label>Amount:</Form.Label>
+          <Form.Control
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="Amount"
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className="btn-secondary" onClick={submitTransaction}>
+            Submit
+          </Button>
+          <Button className="btn-secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Button className="btn-secondary mt-2" onClick={handleOpen}>
+        Submit New Transaction
+      </Button>
+    </>
   );
 };
 

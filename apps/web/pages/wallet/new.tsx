@@ -1,11 +1,11 @@
 import { NextPage } from "next";
 import Layout from "../../components/Layout/Layout";
-import NewWalletForm from "../../components/Wallet/AddWalletForm";
+import WalletAddForm from "../../components/Wallet/WalletAddForm";
 
 const NewWallet: NextPage = () => {
   return (
     <Layout>
-      <NewWalletForm />
+      <WalletAddForm />
     </Layout>
   );
 };

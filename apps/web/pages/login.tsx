@@ -1,7 +1,16 @@
 import { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
+import {
+  Button,
+  Col,
+  Container,
+  Row,
+  Stack,
+  Toast,
+  ToastContainer,
+} from "react-bootstrap";
 import { useMoralis } from "react-moralis";
 import { Web3Provider } from "react-moralis/lib/hooks/core/useMoralis/_useMoralisWeb3";
 
@@ -28,15 +37,14 @@ const connectors: {
 ];
 
 const Login: NextPage = () => {
-  const {
-    authenticate,
-    isAuthenticated,
-    isWeb3Enabled,
-    isInitialized,
-    enableWeb3,
-  } = useMoralis();
+  const { authenticate } = useMoralis();
   const router = useRouter();
+  const [showToast, setShowToast] = useState(false);
   const loginHandler = async (connectorId?: string) => {
+    if (!window.ethereum) {
+      setShowToast(true);
+      return;
+    }
     try {
       if (connectorId) {
         await authenticate({ provider: connectorId as Web3Provider });
@@ -51,31 +59,41 @@ const Login: NextPage = () => {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center flex-column">
-      <div className="display-4 m-5">Multi-Signature Wallet</div>
-      <Image
-        className="img-thumbnail"
-        src="/home_image.jpeg"
-        width="800"
-        height="500"
-        alt="image thumbnail"
-        layout="fixed"
-      />
-      <div className="d-flex align-items-center justify-content-center">
-        <button
-          className="btn btn-secondary m-5"
-          onClick={() => loginHandler()}
-        >
-          Metamask
-        </button>
-        <button
-          className="btn btn-secondary m-5"
-          onClick={() => loginHandler("walletconnect")}
-        >
-          WalletConnect
-        </button>
-      </div>
-    </div>
+    <Container>
+      <Stack className="mx-auto">
+        <h1 className="display-4 m-5 text-center">Multi-Signature Wallet</h1>
+        <div className="mx-auto">
+          <Image
+            className="img-thumbnail mx-auto"
+            src="/home_image.jpeg"
+            width="800"
+            height={"500"}
+            layout="fixed"
+            alt="image thumbnail"
+          />
+        </div>
+        <div className="mx-auto">
+          <Button className="btn-secondary m-5" onClick={() => loginHandler()}>
+            Metamask
+          </Button>
+          <Button
+            className="btn-secondary m-5"
+            onClick={() => loginHandler("walletconnect")}
+          >
+            WalletConnect
+          </Button>
+        </div>
+
+        <ToastContainer className="p-3" position={"top-start"}>
+          <Toast show={showToast} onClose={() => setShowToast(false)}>
+            <Toast.Header>
+              <strong className="me-auto">Web3 wallet not found!</strong>
+            </Toast.Header>
+            <Toast.Body>Please enable MetaMask or WalletConnect.</Toast.Body>
+          </Toast>
+        </ToastContainer>
+      </Stack>
+    </Container>
   );
 };
 

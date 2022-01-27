@@ -95,4 +95,12 @@ contract MultiSigWalletFactory {
   {
     return wallet.getTransaction(_txIndex);
   }
+
+  function getPercentConfirmationsRequired(MultiSigWallet wallet)
+    public
+    view
+    returns (uint256)
+  {
+    return wallet.percentConfirmationsRequired();
+  }
 }
