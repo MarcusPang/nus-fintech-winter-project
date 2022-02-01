@@ -72,6 +72,16 @@ const TransactionRow = ({ transaction, wallet }: TransactionRowProps) => {
     });
   };
 
+  const onExecute = () => {
+    fetch({
+      params: createWalletFactoryOptions("executeTransaction", {
+        wallet,
+        _txIndex: transaction.id,
+      }),
+      onSuccess: (res) => console.log(res),
+    });
+  };
+
   return (
     <tr>
       <td className="text-center align-middle">
@@ -95,8 +105,8 @@ const TransactionRow = ({ transaction, wallet }: TransactionRowProps) => {
         </Button>
       </td>
       <td className="text-center align-middle">
-        <Button className="btn-secondary">
-          <FaCheck />
+        <Button className="btn-secondary" onClick={onExecute}>
+          Execute
         </Button>
       </td>
     </tr>
