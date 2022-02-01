@@ -20,26 +20,25 @@ contract MultiSigWalletFactory {
 
   // msg.sender is automatically added on frontend into _owners
   function createWallet(
-    address[] memory _owners,
+    address[] calldata _owners,
     uint256 _percentConfirmationsRequired
-  ) public returns (MultiSigWallet) {
+  ) external returns (MultiSigWallet) {
     MultiSigWallet wallet = new MultiSigWallet(
       _owners,
       _percentConfirmationsRequired
     );
     // index of wallets will match walletCreators
     wallets.push(wallet);
-    walletCreators.push(msg.sender);
+    walletCreators.push(_owners[0]);
     return wallet;
   }
 
   //Expose wallet interfaces
-  //Should take in wallet address instead of wallet?
-  function addOwner(MultiSigWallet wallet, address newOwner) public {
+  function addOwner(MultiSigWallet wallet, address newOwner) external {
     wallet.addOwner(newOwner, msg.sender);
   }
 
-  function removeOwner(MultiSigWallet wallet, address existingOwner) public {
+  function removeOwner(MultiSigWallet wallet, address existingOwner) external {
     wallet.removeOwner(existingOwner, msg.sender);
   }
 
@@ -48,21 +47,45 @@ contract MultiSigWalletFactory {
     address _from,
     address _to,
     uint256 _value,
-    bytes memory _data
-  ) public {
+    bytes calldata _data
+  ) external {
     wallet.submitTransaction(_from, _to, _value, _data);
   }
 
-  function confirmTransaction(MultiSigWallet wallet, uint256 _txIndex) public {
+  function confirmTransaction(MultiSigWallet wallet, uint256 _txIndex)
+    external
+  {
     wallet.confirmTransaction(_txIndex, msg.sender);
   }
 
-  function executeTransaction(MultiSigWallet wallet, uint256 _txIndex) public {
+  function executeTransaction(MultiSigWallet wallet, uint256 _txIndex)
+    external
+  {
     wallet.executeTransaction(_txIndex, msg.sender);
   }
 
-  function revokeConfirmation(MultiSigWallet wallet, uint256 _txIndex) public {
+  function revokeConfirmation(MultiSigWallet wallet, uint256 _txIndex)
+    external
+  {
     wallet.revokeConfirmation(_txIndex, msg.sender);
+  }
+
+  function setPercentConfirmationRequired(
+    MultiSigWallet wallet,
+    uint256 _percentConfirmationRequired
+  ) external {
+    wallet.setPercentConfirmationRequired(
+      _percentConfirmationRequired,
+      msg.sender
+    );
+  }
+
+  function isOwner(MultiSigWallet wallet, address _owner)
+    public
+    view
+    returns (bool)
+  {
+    return wallet.isOwner(_owner);
   }
 
   function getOwners(MultiSigWallet wallet)
@@ -96,11 +119,11 @@ contract MultiSigWalletFactory {
     return wallet.getTransaction(_txIndex);
   }
 
-  function getPercentConfirmationsRequired(MultiSigWallet wallet)
+  function getPercentConfirmationRequired(MultiSigWallet wallet)
     public
     view
     returns (uint256)
   {
-    return wallet.percentConfirmationsRequired();
+    return wallet.percentConfirmationRequired();
   }
 }
