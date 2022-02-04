@@ -10,9 +10,6 @@
 }
 
 .sideBarTab {
-  outline: none;
-  border: none;
-  background-color: transparent;
   padding: 0.5rem;
   transition: all 0.2s ease-in-out;
 }

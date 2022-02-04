@@ -26,7 +26,7 @@ describe("WalletFactory", async () => {
     [owner, addr1, addr2] = addresses;
   });
 
-  describe("wallet creation", async () => {
+  describe("Wallet Creation", async () => {
     it("should be able to create a wallet with correct owner", async () => {
       const percetageConfirmation = 100;
       await walletFactory.createWallet([owner.address], percetageConfirmation);
@@ -76,7 +76,7 @@ describe("WalletFactory", async () => {
     });
   });
 
-  describe("wallet owners", async () => {
+  describe("Wallet Owners", async () => {
     it("should be able to add owners", async () => {
       const percentageConfirmation = 54;
       await walletFactory.createWallet([owner.address], percentageConfirmation);
@@ -108,11 +108,47 @@ describe("WalletFactory", async () => {
 
       const walletOwners = await walletFactory.getOwners(walletAddress);
 
-      walletOwners.forEach(async (ownerAddress) => {
+      const owners: string[] = [];
+      for (const ownerAddress of walletOwners) {
         if (await walletFactory.isOwner(walletAddress, ownerAddress)) {
-          expect(ownerAddress).to.eql([owner.address]);
+          owners.push(ownerAddress);
         }
-      });
+      }
+
+      expect(owners).to.eql([owner.address]);
+    });
+  });
+
+  describe("Wallet Transactions", async () => {
+    it("should be able to submit transactions", async () => {
+      const percentageConfirmation = 100;
+      await walletFactory.createWallet(
+        [owner.address, addr1.address],
+        percentageConfirmation
+      );
+
+      const walletAddress = (await walletFactory.getWallets())[0];
+      await walletFactory.submitTransaction(
+        walletAddress,
+        owner.address,
+        addr2.address,
+        ethers.utils.parseEther("1"),
+        "0x00"
+      );
+
+      expect(await walletFactory.getTransactionCount(walletAddress)).to.equal(
+        1
+      );
+
+      const transaction = await walletFactory.getTransaction(walletAddress, 0);
+      expect(transaction).to.eql([
+        owner.address,
+        addr2.address,
+        ethers.utils.parseEther("1"),
+        "0x00",
+        false,
+        ethers.BigNumber.from(0),
+      ]);
     });
   });
 });

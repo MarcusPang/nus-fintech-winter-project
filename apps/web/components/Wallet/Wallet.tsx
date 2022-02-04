@@ -47,7 +47,7 @@ const Wallet = ({ wallet }: WalletProps) => {
       },
     });
     percentageFetch({
-      params: createWalletFactoryOptions("getPercentConfirmationsRequired", {
+      params: createWalletFactoryOptions("getPercentConfirmationRequired", {
         wallet,
       }),
       onSuccess: (res: number) => setPercentageConfirmation(res),
@@ -56,8 +56,6 @@ const Wallet = ({ wallet }: WalletProps) => {
       setTransactions([]);
     };
   }, [wallet]);
-
-  console.log(transactions);
 
   return (
     <Card className={styles.wallet}>

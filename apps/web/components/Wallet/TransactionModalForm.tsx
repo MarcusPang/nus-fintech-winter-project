@@ -25,8 +25,8 @@ const TransactionModalForm = ({ wallet }: TransactionModalFormProps) => {
         _value: ethers.utils.parseEther(amount),
         _data: "0x00",
       }),
-      onSuccess: (res) => console.log(res),
-      onError: (err) => console.error(err),
+      // onSuccess: (res) => console.log(res),
+      // onError: (err) => console.error(err),
     });
   };
 

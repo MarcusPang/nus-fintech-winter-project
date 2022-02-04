@@ -17,30 +17,33 @@ const WalletSidebar = ({}: WalletSidebarInterface) => {
   const [wallets, setWallets] = useState<string[]>([]);
 
   useEffect(() => {
-    // get user's wallets
-    walletFetch({
-      params: createWalletFactoryOptions("getWallets", {}),
-      onSuccess: (wallets: string[]) => {
-        if (wallets && wallets.length) {
-          // if there are wallets then search for creators to filter by user
-          walletOwnerFetch({
-            params: createWalletFactoryOptions("getWalletCreators", {}),
-            onSuccess: (owners: string[]) => {
-              // owners and wallets arrays will have matching indices
-              const userAddress = user.get("ethAddress").toLowerCase();
-
-              const currentWallets = new Set<string>();
-              wallets.forEach((wallet, index) => {
-                if (owners[index].toLowerCase() === userAddress) {
-                  currentWallets.add(wallet);
-                }
+    if (user) {
+      // get user's wallets
+      walletFetch({
+        params: createWalletFactoryOptions("getWallets", {}),
+        onSuccess: (existingWallets: string[]) => {
+          // if there are wallets then check each wallet if user is owner
+          if (existingWallets && existingWallets.length) {
+            existingWallets.forEach(async (wallet) => {
+              await walletOwnerFetch({
+                params: createWalletFactoryOptions("isOwner", {
+                  wallet,
+                  _owner: user.get("ethAddress").toLowerCase(),
+                }),
+                onSuccess: (isOwner: boolean) => {
+                  if (isOwner) {
+                    setWallets((prev) => [...new Set([...prev, wallet])]);
+                  }
+                },
               });
-              setWallets(Array.from(currentWallets));
-            },
-          });
-        }
-      },
-    });
+            });
+          }
+        },
+      });
+    }
+    return () => {
+      setWallets([]);
+    };
   }, [isAuthenticated, isInitialized, isWeb3Enabled]);
 
   if (!isLoading && wallets) {
