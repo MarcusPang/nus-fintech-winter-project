@@ -1,6 +1,5 @@
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Nav } from "react-bootstrap";
+import { Nav, Spinner } from "react-bootstrap";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import styles from "../../styles/index.module.css";
 import { createWalletFactoryOptions } from "../../utils/web3";
@@ -9,8 +8,6 @@ import CustomNavLink from "./CustomNavLink";
 interface WalletSidebarInterface {}
 
 const WalletSidebar = ({}: WalletSidebarInterface) => {
-  const router = useRouter();
-
   const { user, isAuthenticated, isInitialized, isWeb3Enabled } = useMoralis();
   const { fetch: walletFetch, isLoading } = useWeb3ExecuteFunction();
   const { fetch: walletOwnerFetch } = useWeb3ExecuteFunction();
@@ -23,6 +20,7 @@ const WalletSidebar = ({}: WalletSidebarInterface) => {
         params: createWalletFactoryOptions("getWallets", {}),
         onSuccess: (existingWallets: string[]) => {
           // if there are wallets then check each wallet if user is owner
+          // TODO cache responses/store in database
           if (existingWallets && existingWallets.length) {
             existingWallets.forEach(async (wallet) => {
               await walletOwnerFetch({
@@ -44,9 +42,16 @@ const WalletSidebar = ({}: WalletSidebarInterface) => {
     return () => {
       setWallets([]);
     };
-  }, [isAuthenticated, isInitialized, isWeb3Enabled]);
+  }, [
+    isAuthenticated,
+    isInitialized,
+    isWeb3Enabled,
+    user,
+    walletFetch,
+    walletOwnerFetch,
+  ]);
 
-  if (!isLoading && wallets) {
+  if (!isLoading && wallets.length) {
     return (
       <>
         {wallets.map((wallet, key) => (
@@ -59,7 +64,11 @@ const WalletSidebar = ({}: WalletSidebarInterface) => {
       </>
     );
   }
-  return <div className="loading"></div>;
+  return (
+    <div className="px-4 py-1">
+      <Spinner animation="border" />
+    </div>
+  );
 };
 
 export default WalletSidebar;

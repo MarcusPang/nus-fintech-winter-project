@@ -4,11 +4,13 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
 import { createWalletFactoryOptions } from "../../utils/web3";
 
-interface TransactionModalFormProps {
+interface WalletAddTransactionModalProps {
   wallet: string;
 }
 
-const TransactionModalForm = ({ wallet }: TransactionModalFormProps) => {
+const WalletAddTransactionModal = ({
+  wallet,
+}: WalletAddTransactionModalProps) => {
   const { user } = useMoralis();
   const [userAccount, setUserAccount] = useState("");
   const [amount, setAmount] = useState("");
@@ -40,17 +42,21 @@ const TransactionModalForm = ({ wallet }: TransactionModalFormProps) => {
           <Modal.Title id="txnModalLabel">Submit New Transaction</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form.Label>Receiving user account:</Form.Label>
-          <Form.Control
-            onChange={(e) => setUserAccount(e.target.value)}
-            className="mb-2"
-            placeholder="User account"
-          />
-          <Form.Label>Amount:</Form.Label>
-          <Form.Control
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="Amount"
-          />
+          <Form.Group controlId="toUserAccount">
+            <Form.Label>Receiving user account:</Form.Label>
+            <Form.Control
+              onChange={(e) => setUserAccount(e.target.value)}
+              className="mb-2"
+              placeholder="User account"
+            />
+          </Form.Group>
+          <Form.Group controlId="toAmount">
+            <Form.Label>Amount:</Form.Label>
+            <Form.Control
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="Amount"
+            />
+          </Form.Group>
         </Modal.Body>
         <Modal.Footer>
           <Button className="btn-secondary" onClick={submitTransaction}>
@@ -68,4 +74,4 @@ const TransactionModalForm = ({ wallet }: TransactionModalFormProps) => {
   );
 };
 
-export default TransactionModalForm;
+export default WalletAddTransactionModal;

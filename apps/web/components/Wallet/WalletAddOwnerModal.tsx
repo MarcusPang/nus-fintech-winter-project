@@ -27,11 +27,13 @@ const WalletAddOwnerModal = ({ wallet }: { wallet: string }) => {
           <Modal.Title>Add Owner</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form.Label>User account:</Form.Label>
-          <Form.Control
-            onChange={(e) => setUserAccount(e.target.value)}
-            placeholder="User account"
-          />
+          <Form.Group controlId="userAccount">
+            <Form.Label>User account:</Form.Label>
+            <Form.Control
+              onChange={(e) => setUserAccount(e.target.value)}
+              placeholder="User account"
+            />
+          </Form.Group>
         </Modal.Body>
         <Modal.Footer>
           <Button className="btn-secondary" onClick={addOwner}>

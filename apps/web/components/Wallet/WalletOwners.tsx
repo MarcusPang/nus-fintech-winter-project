@@ -22,9 +22,9 @@ const WalletOwners = ({ wallet }: WalletOwnersProps) => {
     return () => {
       setOwners([]);
     };
-  }, [wallet]);
+  }, [ownerFetch, wallet]);
 
-  const deleteOwner = useCallback(async (owner: string) => {
+  const deleteOwner = async (owner: string) => {
     await removeOwnerFetch({
       params: createWalletFactoryOptions("removeOwner", {
         wallet,
@@ -36,10 +36,11 @@ const WalletOwners = ({ wallet }: WalletOwnersProps) => {
         console.log("[results]: ", results);
       },
     });
-  }, []);
+  };
 
   return (
     <>
+      <strong className="mt-4">Owners:</strong>
       {owners.map((owner, index) => (
         <WalletOwnerRow
           text={owner}

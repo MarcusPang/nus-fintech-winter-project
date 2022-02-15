@@ -1,6 +1,6 @@
 # Fintech Winter Project: Multisig Contracts
 
-# TODO
+## TODO
 
 - [x] Write contracts
 - [x] Connect with frontend
@@ -35,7 +35,7 @@
 - [ ] See past transactions
 - [ ] See all users (like a explorer tool)
 
-# Setup
+## Setup
 
 Commands:
 
@@ -60,15 +60,15 @@ Alternatively, you can open the instances in separate terminals,
 - `yarn dev` or `yarn dev:mac` in [apps/contracts](apps/contracts) to start local dev network, build smart contracts, and start reverse proxy (see [package.json](apps/contracts/package.json) to see the commands being run concurrently)
 - `yarn dev` in [apps/web](apps/web) to start frontend
 
-# Frameworks/Libraries
+## Frameworks/Libraries
 
-## Contracts
+### Contracts
 
 - Smart contracts built with [Hardhat](https://hardhat.org)
 - MultiSigWallet contract code adapted from [this example](https://solidity-by-example.org/app/multi-sig-wallet/)
 - Smart contracts deployed on Ropsten network with the help of [Alchemy](https://www.alchemy.com/)
 
-## Frontend
+### Frontend
 
 - Next.js
 - TypeScript

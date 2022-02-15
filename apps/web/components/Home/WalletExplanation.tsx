@@ -5,7 +5,7 @@ const WalletExplanation = () => {
   return (
     <Accordion style={{ marginBottom: 12 }}>
       <Accordion.Item eventKey="0">
-        <Accordion.Header> Wallet Explanation</Accordion.Header>
+        <Accordion.Header>Click to see our wallet works!</Accordion.Header>
         <Accordion.Body>
           <Image
             src="/wallet_explanation.png"

@@ -14,7 +14,7 @@ export interface TransactionData {
   numConfirmations: string;
 }
 
-interface TransactionRowProps {
+interface WalletTransactionRowProps {
   transaction: TransactionData & { id: number };
   wallet: string;
 }
@@ -59,7 +59,7 @@ interface TransactionRowProps {
     }
 } */
 
-const TransactionRow = ({ transaction, wallet }: TransactionRowProps) => {
+const WalletTransactionRow = ({ transaction, wallet }: WalletTransactionRowProps) => {
   const { fetch, isLoading } = useWeb3ExecuteFunction();
 
   const onConfirm = () => {
@@ -113,4 +113,4 @@ const TransactionRow = ({ transaction, wallet }: TransactionRowProps) => {
   );
 };
 
-export default TransactionRow;
+export default WalletTransactionRow;
