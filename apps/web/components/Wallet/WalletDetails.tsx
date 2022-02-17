@@ -20,7 +20,7 @@ const WalletDetails = ({ wallet }: WalletDetailsProps) => {
         address: wallet,
       },
       onSuccess: (res) =>
-        setAmount(String(Moralis.Units.FromWei(res.balance, 6))),
+        setAmount(String(Moralis.Units.FromWei(res.balance, 18))),
     });
     return () => {
       setAmount("0");
