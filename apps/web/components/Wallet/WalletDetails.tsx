@@ -19,7 +19,8 @@ const WalletDetails = ({ wallet }: WalletDetailsProps) => {
         chain: "ropsten",
         address: wallet,
       },
-      onSuccess: (res) => setAmount(Moralis.Units.FromWei(res.balance)),
+      onSuccess: (res) =>
+        setAmount(String(Moralis.Units.FromWei(res.balance, 6))),
     });
     return () => {
       setAmount("0");
